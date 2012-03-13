@@ -40,7 +40,7 @@ feature "cacheing copy" do
     visit root_path 
     assert Copycat.cache["sample_copy"] == "copyfoo"
     visit "/copycat_translations/#{cct.id}/edit"
-    click_button "Submit"
+    click_button "Update"
     assert Copycat.cache["sample_copy"].nil?
   end
 
