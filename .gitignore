@@ -1,6 +1,8 @@
 .bundle/
-log/*.log
+log/
 pkg/
-spec/dummy/db/*
-spec/dummy/log/*
-spec/dummy/tmp/*
+spec/dummy/db/*.sqlite3
+spec/dummy/db/schema.rb
+spec/dummy/db/migrate/
+spec/dummy/log/
+spec/dummy/tmp/
