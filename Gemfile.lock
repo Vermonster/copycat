@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     copycat (0.0.1)
-      rails (~> 3.2.2)
+      rails (>= 3.0.0)
 
 GEM
   remote: http://rubygems.org/
