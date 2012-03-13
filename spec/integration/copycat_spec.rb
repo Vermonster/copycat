@@ -16,8 +16,8 @@ feature "displaying copy" do
   end
 
   it "displays the copybar when it's available" do
-    Factory(:copybar, :key => "sample_copy", :value => "copyfoo")
-    visit "/foos"
+    Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
+    visit root_path 
     assert_match "Hello World", body
     assert_match "copyfoo", body
   end
@@ -25,24 +25,23 @@ feature "displaying copy" do
 end
 
 feature "cacheing copy" do
-  pending
   
-  before { Copybara.clear_cache }
+  before { Copycat.clear_cache }
 
   it "has no cache for a new key until we visit the page" do
-    Factory(:copybar, :key => "sample_copy", :value => "copyfoo")
-    assert Copybara.cache["sample_copy"].nil?
-    visit "/foos"
-    assert Copybara.cache["sample_copy"] == "copyfoo"
+    Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
+    assert Copycat.cache["sample_copy"].nil?
+    visit root_path
+    assert Copycat.cache["sample_copy"] == "copyfoo"
   end
 
-  it "clears the cache when we update a copybar" do
-    copybar = Factory(:copybar, :key => "sample_copy", :value => "copyfoo")
-    visit "/foos"
-    assert Copybara.cache["sample_copy"] == "copyfoo"
-    visit "/copybars/#{copybar.id}/edit"
+  it "clears the cache when we update a copycat_translation" do
+    cct = Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
+    visit root_path 
+    assert Copycat.cache["sample_copy"] == "copyfoo"
+    visit "/copycat_translations/#{cct.id}/edit"
     click_button "Submit"
-    assert Copybara.cache["sample_copy"].nil?
+    assert Copycat.cache["sample_copy"].nil?
   end
 
 end
