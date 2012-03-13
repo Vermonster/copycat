@@ -1,0 +1,2 @@
+module Copycat
+end
