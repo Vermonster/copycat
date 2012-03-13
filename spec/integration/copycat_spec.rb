@@ -2,12 +2,14 @@ require 'spec_helper'
 
 feature "displaying copy" do
 
-  #foos = %| 
+  #body = %| 
   #   <h2> Hello World </h2> 
   #   <div> 
   #     <%= Copybara.t('sample_copy') %>
   #   </div> 
   # |
+
+  before { Copycat.clear_cache } 
 
   it "displays the default when no copybar is present" do
     visit root_path
@@ -20,6 +22,20 @@ feature "displaying copy" do
     visit root_path 
     assert_match "Hello World", body
     assert_match "copyfoo", body
+  end
+
+end
+
+feature "creating copy" do
+
+  before { Copycat.clear_cache } 
+  
+  it "creates an empty copycat_translation when we render a page that calls Copycat with a new key" do
+    assert CopycatTranslation.all.size == 0
+    visit root_path
+    assert CopycatTranslation.all.size == 1
+    assert CopycatTranslation.first.key = "sample_copy"
+    assert CopycatTranslation.first.value = "Missing copy for sample_value"
   end
 
 end

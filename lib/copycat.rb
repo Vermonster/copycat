@@ -11,12 +11,9 @@ module Copycat
       cache[key].html_safe
     else 
       copybar = CopycatTranslation.where("key = '#{key}'").limit(1).first
-      if copybar
-        cache[key] = copybar.value
-        copybar.value.html_safe 
-      else
-        "Missing copy for #{key}"
-      end
+      copybar = CopycatTranslation.create!(:key => key, :value => "Missing copy for #{key}") unless copybar
+      cache[key] = copybar.value
+      copybar.value.html_safe 
     end
   end
 
