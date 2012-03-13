@@ -1,0 +1,5 @@
+<%= form_for @copycat_translation, :url => { :action => "update" }, :html => {:class => "copycat_translation"} do |f| %>
+  <%= f.text_field :key %>
+  <%= f.text_area :value, :size => "60x12" %>
+  <%= f.submit "Update" %>
+<% end %>

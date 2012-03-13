@@ -1,0 +1,18 @@
+<ul>
+  <li><h2>Copycat</h2></li>
+  <li><a href="#">Download</a></li>
+  <li><a href="#">Upload</a></li>
+  <li><a href="#">Readme</a></li>
+</ul>
+<table>
+  <% @copycat_translations.each do |t| %>
+  <tr>
+    <td>
+      <%= link_to t.key, edit_copycat_translation_path(t) %>
+    </td>
+    <td>
+      <%= t.value %>
+    </td>
+  </tr>
+  <% end %>
+</table>
