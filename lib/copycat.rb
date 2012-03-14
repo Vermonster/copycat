@@ -38,6 +38,7 @@ module Copycat
     result
   end
 
+  # ({"a"=>{"b"=>{"e"=>"f"}}}, ["a","b","c"], "d") ----> {"a"=>{"b"=>{"c"=>"d", "e"=>"f"}}}
   def self.hash_fatten(hash, keys, value)
     if keys.length == 1
       raise "duplicate key" if hash[keys.first]

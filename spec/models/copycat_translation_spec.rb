@@ -26,15 +26,12 @@ describe CopycatTranslation do
     Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
     Factory(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
     yaml = CopycatTranslation.export_yaml
-    assert yaml =~ /sample_copy: copyfoo/
-    assert yaml =~ /sample_copy2: copybaz/
+    assert yaml =~ /sample_copy: copyfoo\n\s*sample_copy2: copybaz/
     
     Factory(:copycat_translation, :key => "a.sample_copy3", :value => "copyfoo")
     Factory(:copycat_translation, :key => "a.sample_copy4", :value => "copybaz")
     yaml = CopycatTranslation.export_yaml
-    assert yaml =~ /a:\n/
-    assert yaml =~ /sample_copy3: copyfoo/
-    assert yaml =~ /sample_copy4: copybaz/
+    assert yaml =~ /a:\n\s*sample_copy3: copyfoo\n\s* sample_copy4: copybaz/
   end
 
 end
