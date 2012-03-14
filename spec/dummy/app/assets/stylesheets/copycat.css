@@ -1,0 +1,23 @@
+#copycat li, #copycat li h2 {
+  display: inline;
+  padding: 2em;
+}
+#copycat table {
+  padding-top: 2em;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+#copycat table th {
+  text-align: left;
+}
+#copycat table tr {
+  padding: 1em;
+}
+#copycat table tr td.key {
+  width: 20%;
+  margin-right: 5%;
+}
+#copycat table tr td.value {
+  width: 75%;
+}

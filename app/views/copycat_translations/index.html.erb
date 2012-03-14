@@ -1,3 +1,4 @@
+<div id="copycat">
 <ul>
   <li><h2>Copycat</h2></li>
   <li><a href="#">Download</a></li>
@@ -5,14 +6,19 @@
   <li><a href="#">Readme</a></li>
 </ul>
 <table>
+  <tr>
+    <th> Key </th>
+    <th> Value </th>
+  <tr>
   <% @copycat_translations.each do |t| %>
   <tr>
-    <td>
+    <td class="key">
       <%= link_to t.key, edit_copycat_translation_path(t) %>
     </td>
-    <td>
+    <td class="value">
       <%= t.value %>
     </td>
   </tr>
   <% end %>
 </table>
+</div>
