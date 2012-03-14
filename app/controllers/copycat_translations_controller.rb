@@ -13,7 +13,7 @@ class CopycatTranslationsController < ApplicationController
     if cct.save
       Copycat.clear_cache(params["copycat_translation"]["key"])
       @copycat_translations = CopycatTranslation.all
-      render :action => 'index'
+      redirect_to copycat_translations_path
     else
       @copycat_translation = cct
       render :action => 'edit'
