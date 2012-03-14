@@ -25,24 +25,7 @@ module Copycat
     end
   end
 
-  def self.import_yaml(file)
-    YAML.load(file).each do |locale, copies|
-      hash_flatten(copies).each do |key, value|
-        if (c = CopycatTranslation.where("key = '#{key}'").limit(1).first)  #TODO and locale
-          c.value = value
-          c.save!
-        else
-          CopycatTranslation.create!(:key => key, :value => value, :locale => locale)
-        end
-      end
-    end
-  end
-
-  # { "foo" => { "a" => "1" , "b" => "2" } }
-  # 
-  # { "foo.a" => 1, "foo.b" => 2 }
-  #
-
+  # {"foo"=>{"a"=>"1", "b"=>"2"}} ----> {"foo.a"=>1, "foo.b"=>2}
   def self.hash_flatten(hash)
     result = {} 
     hash.each do |key, value|
@@ -55,8 +38,16 @@ module Copycat
     result
   end
 
-  def self.export_yaml
-
+  def self.hash_fatten(hash, keys, value)
+    if keys.length == 1
+      raise "duplicate key" if hash[keys.first]
+      hash[keys.first] = value
+    else
+      head = keys.first
+      rest = keys[1..-1]
+      hash[head] = hash_fatten(hash[head] || {}, rest, value)
+    end
+    hash
   end
 
 end
