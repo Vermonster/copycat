@@ -1,6 +1,10 @@
 class CopycatTranslationsController < ApplicationController
   def index
     @copycat_translations = CopycatTranslation.all
+    respond_to do |format|
+      format.html
+      format.yaml { render :text => CopycatTranslation.export_yaml }
+    end
   end
 
   def edit
@@ -19,4 +23,5 @@ class CopycatTranslationsController < ApplicationController
       render :action => 'edit'
     end
   end
+
 end
