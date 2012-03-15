@@ -21,7 +21,7 @@ module Copycat
     if key
       cache[key] = nil
     else
-      cache = nil
+      @cache = {}
     end
   end
 

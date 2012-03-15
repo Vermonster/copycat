@@ -9,15 +9,15 @@ feature "displaying copy" do
   #   </div> 
   # |
 
-  before { Copycat.clear_cache } 
+  before(:each) { Copycat.clear_cache } 
 
-  it "displays the default when no copybar is present" do
+  it "displays the default when no copycat_translation is present" do
     visit root_path
     assert_match "Hello World", body
     assert_match "sample_copy", body
   end
 
-  it "displays the copybar when it's available" do
+  it "displays the copycat_translation when it's available" do
     Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
     visit root_path 
     assert_match "Hello World", body
@@ -28,7 +28,7 @@ end
 
 feature "creating copy" do
 
-  before { Copycat.clear_cache } 
+  before(:each) { Copycat.clear_cache } 
   
   it "creates an empty copycat_translation when we render a page that calls Copycat with a new key" do
     assert CopycatTranslation.count == 0
@@ -42,7 +42,7 @@ end
 
 feature "cacheing copy" do
   
-  before { Copycat.clear_cache }
+  before(:each) { Copycat.clear_cache }
 
   it "has no cache for a new key until we visit the page" do
     Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")

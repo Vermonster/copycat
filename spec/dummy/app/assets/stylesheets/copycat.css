@@ -4,15 +4,25 @@
 }
 #copycat table, #copycat p, #copycat form, #copycat div.copycat-alert, #copycat div.copycat-notice {
   padding-top: 2em;
-  width: 80%;
+  width: 75%;
   margin-left: 10%;
   margin-right: 10%;
 }
+#copycat table {
+  border-bottom: 1px #CCC dotted;
+  padding-bottom: 1em;
+}
 #copycat table th {
   text-align: left;
+  padding-bottom: 1em;
 }
-#copycat table tr {
-  padding: 1em;
+#copycat table tr td {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  border-top: 1px #CCC dotted;
+}
+#copycat table tr td.last {
+  border-bottom: none;
 }
 #copycat table tr td.key {
   width: 20%;

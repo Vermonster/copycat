@@ -3,7 +3,7 @@ class CopycatTranslationsController < ApplicationController
     @copycat_translations = CopycatTranslation.all
     respond_to do |format|
       format.html
-      format.yaml { render :text => CopycatTranslation.export_yaml }
+      format.yaml { send_data CopycatTranslation.export_yaml, :filename => "copycat_translations_#{Time.now.strftime("%Y_%m_%d_%H_%M_%S")}.yml" }
     end
   end
 
