@@ -2,11 +2,13 @@
   display: inline;
   padding: 2em;
 }
-#copycat table, #copycat p, #copycat form, #copycat div.copycat-alert, #copycat div.copycat-notice {
-  padding-top: 2em;
+#copycat table, #copycat div.copycat-alert, #copycat div.copycat-notice, div#readme, div#upload {
   width: 75%;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-left: 12.5%;
+  margin-right: 12.5%;
+}
+#copycat table, #copycat form, #copycat div.copycat-alert, #copycat div.copycat-notice, div#readme, div#upload {
+  padding-top: 2em;
 }
 #copycat table {
   border-bottom: 1px #CCC dotted;

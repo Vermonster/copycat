@@ -1,4 +1,5 @@
 class CopycatTranslationsController < ApplicationController
+
   def index
     @copycat_translations = CopycatTranslation.all
     respond_to do |format|
@@ -22,6 +23,9 @@ class CopycatTranslationsController < ApplicationController
       @copycat_translation = cct
       render :action => 'edit'
     end
+  end
+
+  def readme
   end
 
   def upload
