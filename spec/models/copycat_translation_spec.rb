@@ -22,6 +22,18 @@ describe CopycatTranslation do
     assert CopycatTranslation.find_by_key("hello").value == "Hello world"
   end
 
+  describe "export YAML" do
+    it "can be consumed by i18N" do
+      I18n.t('site.title').should_not == 'My Blog'
+      CopycatTranslation.destroy_all
+      CopycatTranslation.create(key: 'site.title', value: 'My Blog')
+      data = YAML.load(CopycatTranslation.export_yaml)
+      CopycatTranslation.destroy_all
+      data.each { |locale, d| I18n.backend.store_translations(locale, d || {}) } #i18n/backend/base.rb:159
+      I18n.t('site.title').should == 'My Blog'
+    end
+  end
+
   it "exports YAML" do
     Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
     Factory(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
