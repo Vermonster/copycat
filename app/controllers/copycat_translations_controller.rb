@@ -1,4 +1,8 @@
 class CopycatTranslationsController < ApplicationController
+  
+  #COPYCAT_USERNAME = "foo"
+  #COPYCAT_PASSWORD = "bar" # TODO : Move these to generator, generate random username/password
+  #http_basic_authenticate_with :name => COPYCAT_USERNAME, :password => COPYCAT_PASSWORD
 
   def index
     @copycat_translations = CopycatTranslation.all
