@@ -24,7 +24,11 @@ from i18n gem, lib/i18n/backend/simple.rb
 =end
 module CopycatImplementation
   def lookup(locale, key, scope = [], options = {})
-    super(locale, key, scope = [], options = {})
+    cct = CopycatTranslation.find_by_key(key)
+    return cct.value if cct
+    value = super(locale, key, scope = [], options = {}) || key
+    CopycatTranslation.create(key: key, value: value)
+    value
   end
 end
 

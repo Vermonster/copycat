@@ -5,65 +5,31 @@ feature "use #t" do
   it "uses i18n.t" do
     visit root_path
     page.should have_content 'The Header'
-    page.should have_content 'Intro'
+    page.should have_content 'site.index.intro'
   end
 
-end
-
-feature "displaying copy" do
-
-  before(:each) { Copycat.clear_cache } 
-
-  it "displays the default when no copycat_translation is present" do
+  it "creates a copycat_translation if the yaml has an entry" do
+    CopycatTranslation.find_by_key('site.index.header').should be_nil
     visit root_path
-    assert_match "Hello World", body
-    assert_match "sample_copy", body
+    CopycatTranslation.find_by_key('site.index.header').should_not be_nil
   end
 
-  it "displays the copycat_translation when it's available" do
-    Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
-    visit root_path 
-    assert_match "Hello World", body
-    assert_match "copyfoo", body
-  end
-
-end
-
-feature "creating copy" do
-
-  before(:each) { Copycat.clear_cache } 
-  
-  it "creates an empty copycat_translation when we render a page that calls Copycat with a new key" do
-    assert CopycatTranslation.count == 0
+  it "creates a copycat_translation if the yaml does not have an entry" do
+    CopycatTranslation.find_by_key('site.index.intro').should be_nil
     visit root_path
-    assert CopycatTranslation.count == 1
-    assert CopycatTranslation.first.key = "sample_copy"
-    assert CopycatTranslation.first.value = "Missing copy for sample_value"
+    CopycatTranslation.find_by_key('site.index.intro').should_not be_nil
   end
 
-end
-
-feature "cacheing copy" do
-  
-  before(:each) { Copycat.clear_cache }
-
-  it "has no cache for a new key until we visit the page" do
-    Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
-    assert Copycat.cache["sample_copy"].nil?
+  it "shows the copycat_translation instead of the yaml" do
+    FactoryGirl.create(:copycat_translation, key: 'site.index.header', value: 'A different header')
     visit root_path
-    assert Copycat.cache["sample_copy"] == "copyfoo"
-  end
-
-  it "clears the cache when we update a copycat_translation" do
-    cct = Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
-    visit root_path 
-    assert Copycat.cache["sample_copy"] == "copyfoo"
-    visit "/copycat_translations/#{cct.id}/edit"
-    click_button "Update"
-    assert Copycat.cache["sample_copy"].nil?
+    page.should_not have_content 'The Header'
+    page.should have_content 'A different header'
   end
 
 end
+
+
 
 feature "downloading and uploading yaml files" do
 
