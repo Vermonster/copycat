@@ -77,7 +77,7 @@ feature "downloading and uploading yaml files" do
     CopycatTranslation.all.map(&:destroy)
     assert CopycatTranslation.count == 0
 
-    CopycatTranslation.import_yaml(StringIO.new(yaml))
+    CopycatTranslation.import_yaml(YAML.load(StringIO.new(yaml)))
     assert CopycatTranslation.find_by_key("a.foo1").value == "bar1"
     assert CopycatTranslation.find_by_key("a.foo2").value == "bar2"
     assert CopycatTranslation.find_by_key("a.b.foo3").value == "bar3"

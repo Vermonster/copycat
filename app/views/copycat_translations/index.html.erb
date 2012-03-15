@@ -3,9 +3,10 @@
   <li><h2>Copycat</h2></li>
   <% href = copycat_translations_path + ".yaml"%>
   <li><a href=<%=href%>>Download</a></li>
-  <li><a href="#">Upload</a></li>
+  <li><a href=<%= upload_copycat_translations_path %>>Upload</a></li>
   <li><a href="#">Readme</a></li>
 </ul>
+<div class="copycat-notice"> <%= notice %> </div>
 <table>
   <tr>
     <th> Key </th>

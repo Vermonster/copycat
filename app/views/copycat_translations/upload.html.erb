@@ -1,0 +1,16 @@
+<div id="copycat">
+<ul>
+  <li><h2>Copycat</h2></li>
+  <% href = copycat_translations_path %>
+  <li><a href=<%=href%>>Back</a></li>
+</ul>
+<p>
+Upload a YAML (.yml) file following <a href="http://guides.rubyonrails.org/i18n.html">I18n conventions</a>. 
+</p>
+<%= form_tag 'import_yaml', :multipart => true do -%>
+  <%= file_field_tag "file" %>
+  <%= submit_tag "Upload" %>
+<% end %>
+<div class="copycat-alert"> <%= notice %> </div>
+</div>
+

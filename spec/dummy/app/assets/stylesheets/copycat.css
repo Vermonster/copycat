@@ -2,7 +2,7 @@
   display: inline;
   padding: 2em;
 }
-#copycat table {
+#copycat table, #copycat p, #copycat form, #copycat div.copycat-alert, #copycat div.copycat-notice {
   padding-top: 2em;
   width: 80%;
   margin-left: 10%;
@@ -21,3 +21,12 @@
 #copycat table tr td.value {
   width: 75%;
 }
+#copycat div.copycat-alert {
+  color: red;
+  font-weight: bold;
+}
+#copycat div.copycat-notice {
+  color: green;
+  font-weight: bold;
+}
+

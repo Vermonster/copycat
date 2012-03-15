@@ -15,7 +15,7 @@ describe CopycatTranslation do
         hello: "Hello world"
         sample_copy: "lorem ipsum"   
     YAML
-    CopycatTranslation.import_yaml(StringIO.new(yaml))
+    CopycatTranslation.import_yaml(YAML.load(StringIO.new(yaml)))
 
     assert CopycatTranslation.find_by_key("en.sample_copy").value == "lorem ipsum"
     assert CopycatTranslation.find_by_key("sample_copy2").value == "copybaz"

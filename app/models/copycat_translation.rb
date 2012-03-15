@@ -3,9 +3,9 @@ class CopycatTranslation < ActiveRecord::Base
   validates :key, :value, :presence => true
   validates :key, :uniqueness => true
   
-  def self.import_yaml(file)
-    Copycat.hash_flatten(YAML.load(file)).each do |key, value|
-      if (c = where("key = '#{key}'").limit(1).first)
+  def self.import_yaml(yaml)
+    Copycat.hash_flatten(yaml).each do |key, value|
+      if (c = where("key = ?", key).limit(1).first)
         c.value = value
         c.save!
         Copycat.clear_cache(c.key)

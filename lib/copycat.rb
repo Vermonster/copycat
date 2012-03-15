@@ -19,9 +19,9 @@ module Copycat
 
   def self.clear_cache(key=nil)
     if key
-      @cache[key] = nil
+      cache[key] = nil
     else
-      @cache = nil
+      cache = nil
     end
   end
 
