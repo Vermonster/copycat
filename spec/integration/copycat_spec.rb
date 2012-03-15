@@ -1,13 +1,16 @@
 require 'spec_helper'
 
-feature "displaying copy" do
+feature "use #t" do
 
-  #body = %| 
-  #   <h2> Hello World </h2> 
-  #   <div> 
-  #     <%= Copybara.t('sample_copy') %>
-  #   </div> 
-  # |
+  it "uses i18n.t" do
+    visit root_path
+    page.should have_content 'The Header'
+    page.should have_content 'Intro'
+  end
+
+end
+
+feature "displaying copy" do
 
   before(:each) { Copycat.clear_cache } 
 
