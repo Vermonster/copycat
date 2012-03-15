@@ -35,7 +35,7 @@ class CopycatTranslationsController < ApplicationController
     begin
       CopycatTranslation.import_yaml(params["file"].tempfile)
     rescue StandardError => e
-      flash[:notice] = "There was an error processing your upload"
+      flash[:notice] = "There was an error processing your upload!"
       render :action => 'upload', :status => 400
     else
       redirect_to copycat_translations_path, :notice => "YAML file uploaded successfully!"

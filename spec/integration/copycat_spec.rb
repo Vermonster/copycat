@@ -29,30 +29,54 @@ feature "use #t" do
 
 end
 
-
+require 'tempfile'
 
 feature "downloading and uploading yaml files" do
 
-  it "is unchanged when we download yaml, delete everything, and upload yaml" do
+  it "round-trips the YAML" do
     Factory(:copycat_translation, :key => "a.foo1", :value => "bar1")
-    Factory(:copycat_translation, :key => "a.foo2", :value => "bar2")
+    Factory(:copycat_translation, :key => "a.foo2:", :value => "bar2")
     Factory(:copycat_translation, :key => "a.b.foo3", :value => "bar3")
     Factory(:copycat_translation, :key => "c.foo4", :value => "bar4")
-    Factory(:copycat_translation, :key => "foo5", :value => "bar5")
+    Factory(:copycat_translation, :key => 2, :value => "bar5")
     assert CopycatTranslation.count == 5
 
     visit "/copycat_translations.yaml"
-    yaml = page.text
-    CopycatTranslation.all.map(&:destroy)
+    CopycatTranslation.destroy_all
     assert CopycatTranslation.count == 0
 
-    CopycatTranslation.import_yaml(StringIO.new(yaml))
+    yaml = page.text
+    file = Tempfile.new 'copycat'
+    file.write yaml
+    file.close
+
+    visit upload_copycat_translations_path
+    attach_file "file", file.path
+    click_button "Upload"
+    file.unlink
+
+    assert CopycatTranslation.count == 5
     assert CopycatTranslation.find_by_key("a.foo1").value == "bar1"
-    assert CopycatTranslation.find_by_key("a.foo2").value == "bar2"
+    assert CopycatTranslation.find_by_key("a.foo2:").value == "bar2"
     assert CopycatTranslation.find_by_key("a.b.foo3").value == "bar3"
     assert CopycatTranslation.find_by_key("c.foo4").value == "bar4"
-    assert CopycatTranslation.find_by_key("foo5").value == "bar5"
-    assert CopycatTranslation.count == 5
+    assert CopycatTranslation.find_by_key(2).value == "bar5"
+  end
+
+  it "gives 400 on bad upload" do
+    visit "/copycat_translations.yaml"
+
+    file = Tempfile.new 'copycat'
+    file.write "<<<%%#$W%s"
+    file.close
+
+    visit upload_copycat_translations_path
+    attach_file "file", file.path
+    click_button "Upload"
+    file.unlink
+    page.status_code.should == 400
+    page.should have_content("There was an error processing your upload!")
+    assert CopycatTranslation.count == 0
   end
 
 end
