@@ -3,12 +3,12 @@ require 'spec_helper'
 describe CopycatTranslation do
 
   it "imports YAML" do
-    Factory(:copycat_translation, :key => "en.sample_copy", :value => "copyfoo")
+    Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
     Factory(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
 
-    assert CopycatTranslation.find_by_key("en.sample_copy").value == "copyfoo"
+    assert CopycatTranslation.find_by_key("sample_copy").value == "copyfoo"
     assert CopycatTranslation.find_by_key("sample_copy2").value == "copybaz"
-    assert CopycatTranslation.find_by_key("en.hello").nil?
+    assert CopycatTranslation.find_by_key("hello").nil?
 
     yaml = <<-YAML
       en:
@@ -17,9 +17,9 @@ describe CopycatTranslation do
     YAML
     CopycatTranslation.import_yaml(YAML.load(StringIO.new(yaml)))
 
-    assert CopycatTranslation.find_by_key("en.sample_copy").value == "lorem ipsum"
+    assert CopycatTranslation.find_by_key("sample_copy").value == "lorem ipsum"
     assert CopycatTranslation.find_by_key("sample_copy2").value == "copybaz"
-    assert CopycatTranslation.find_by_key("en.hello").value == "Hello world"
+    assert CopycatTranslation.find_by_key("hello").value == "Hello world"
   end
 
   it "exports YAML" do
