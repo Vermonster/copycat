@@ -4,15 +4,13 @@ class CopycatTranslation < ActiveRecord::Base
   validates :key, :uniqueness => true
   
   def self.import_yaml(yaml)
-    raise "incorrect yaml" unless yaml["en"]
-    data = Copycat.hash_flatten(yaml["en"])
-    data.each do |key, value|
-      if (c = where("key = ?", key).limit(1).first)
+    hash = YAML.load(yaml)
+    hash.each do |locale, data|
+      next unless locale == "en" # not handling non-english languages yet.
+      Copycat.hash_flatten(data).each do |key, value|
+        c = find_or_initialize_by_key(key)
         c.value = value
-        c.save!
-        Copycat.clear_cache(c.key)
-      else
-        create!(:key => key, :value => value)
+        c.save
       end
     end
   end

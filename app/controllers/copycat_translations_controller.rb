@@ -33,11 +33,12 @@ class CopycatTranslationsController < ApplicationController
 
   def import_yaml
     begin
-      yaml = YAML.load(params["file"].tempfile)
-      CopycatTranslation.import_yaml(yaml)
+      CopycatTranslation.import_yaml(params["file"].tempfile)
+    rescue StandardError => e
+      flash[:notice] = "There was an error processing your upload"
+      render :action => 'upload', :status => 400
+    else
       redirect_to copycat_translations_path, :notice => "YAML file uploaded successfully!"
-    rescue => e
-      redirect_to upload_copycat_translations_path, :notice => "Oh no! invalid YAML file."
     end
   end
 

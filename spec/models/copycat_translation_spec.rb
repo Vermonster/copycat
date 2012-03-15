@@ -1,3 +1,4 @@
+#encoding: utf-8
 require 'spec_helper'
 
 describe CopycatTranslation do
@@ -15,7 +16,7 @@ describe CopycatTranslation do
         hello: "Hello world"
         sample_copy: "lorem ipsum"   
     YAML
-    CopycatTranslation.import_yaml(YAML.load(StringIO.new(yaml)))
+    CopycatTranslation.import_yaml(StringIO.new(yaml))
 
     assert CopycatTranslation.find_by_key("sample_copy").value == "lorem ipsum"
     assert CopycatTranslation.find_by_key("sample_copy2").value == "copybaz"
@@ -47,12 +48,13 @@ describe CopycatTranslation do
   end
 
   it "exports and then imports complicated YAML" do
-    Factory(:copycat_translation, :key => "moby_dick", :value => %|Call me Ishmael. Some years ago - never mind how long precisely - having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen, and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people's hats off - then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the ocean with me.|)
+    key = "moby_dick"
+    value = %|<p>Lorem ipsum</p><p class="highlight">∆'≈:</p>|
+    Factory(:copycat_translation, key: key, value: value)
     yaml = CopycatTranslation.export_yaml
     CopycatTranslation.destroy_all
-    CopycatTranslation.import_yaml(YAML.load(StringIO.new(yaml)))
-    assert CopycatTranslation.count == 1
-    assert CopycatTranslation.first.value =~ /the same feelings towards the ocean with me./
+    CopycatTranslation.import_yaml(StringIO.new(yaml))
+    CopycatTranslation.find_by_key(key).value.should == value
   end
 
 end
