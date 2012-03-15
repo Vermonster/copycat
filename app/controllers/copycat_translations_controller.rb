@@ -16,7 +16,7 @@ class CopycatTranslationsController < ApplicationController
     cct = CopycatTranslation.find_by_id(params["id"])
     cct.value = params["copycat_translation"]["value"]
     if cct.save
-      Copycat.clear_cache(params["copycat_translation"]["key"])
+      #Copycat.clear_cache(params["copycat_translation"]["key"])
       @copycat_translations = CopycatTranslation.all
       redirect_to copycat_translations_path
     else

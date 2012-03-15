@@ -11,6 +11,7 @@ class CopycatTranslation < ActiveRecord::Base
         c = find_or_initialize_by_key(key)
         c.value = value
         c.save
+        #Copycat.clear_cache
       end
     end
   end

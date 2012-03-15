@@ -40,25 +40,6 @@ describe Copycat do
     end
   end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   describe "#hash_flatten" do
     it "flattens hashes" do
       before = {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i", "j" => "k"}, "l" => "m"}}
