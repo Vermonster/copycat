@@ -24,11 +24,18 @@ from i18n gem, lib/i18n/backend/simple.rb
 =end
 module CopycatImplementation
   def lookup(locale, key, scope = [], options = {})
-    cct = CopycatTranslation.find_by_key(key)
-    return cct.value if cct
-    value = super(locale, key, scope = [], options = {}) || key
-    CopycatTranslation.create(key: key, value: value)
-    value
+    begin
+      cct = CopycatTranslation.find_by_key(key)
+    rescue ActiveRecord::StatementInvalid
+      raise if CopycatTranslation.table_exists?
+      #assert Rails is initializing for the purpose of running the copycat_translations migration
+      super 
+    else
+      return cct.value if cct
+      value = super(locale, key, scope = [], options = {}) || key
+      CopycatTranslation.create(key: key, value: value)
+      value
+    end
   end
 end
 
