@@ -3,6 +3,7 @@ Gemfile.lock
 .bundle/
 log/
 pkg/
+spec/dummy/config/initializers/copycat.rb
 spec/dummy/db/*.sqlite3
 spec/dummy/db/schema.rb
 spec/dummy/db/migrate/

@@ -9,7 +9,7 @@ Add ```copycat``` to your Gemfile and run bundle.
 Copycat uses a database table to store the copy items, and so it is necessary to create that:
 
 ```
-rake copycat_engine:install:migrations
+rake copycat:install
 rake db:migrate
 ```
 
@@ -24,7 +24,7 @@ Visit the page in your browser, and a Copycat translation will be created for th
 
 ## Rails i18N API ##
 
-You can read about the Rails internationalization framework [here](http://guides.rubyonrails.org/i18n.html). Copycat 
+You can read about the Rails internationalization framework [here](http://guides.rubyonrails.org/i18n.html).
 
 ## Deploying ##
 
@@ -37,7 +37,7 @@ As a Rails engine, Copycat is developed using a nested dummy Rails app. After cl
 ```
 bundle
 cd spec/dummy
-rake copycat_engine:install:migrations
+rake copycat:install
 rake db:create db:migrate db:test:prepare
 cd ../..
 ```
