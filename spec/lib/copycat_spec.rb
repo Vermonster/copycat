@@ -7,7 +7,7 @@ describe Copycat do
       b.class_eval do
         module SimpleImplementation
           def lookup(*args)
-            42
+            "translation missing"
           end
         end
         include SimpleImplementation
@@ -27,7 +27,7 @@ describe Copycat do
 
   describe ".lookup" do
     it "returns simple lookup if copycat_translation missing" do
-      base.lookup(nil, nil).should == 42
+      base.lookup(nil, '').should == "translation missing"
     end
     it "returns copycat_translation if present" do
       cct = FactoryGirl.create(:copycat_translation)
