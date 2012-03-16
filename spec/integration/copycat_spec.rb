@@ -32,6 +32,9 @@ end
 require 'tempfile'
 
 feature "downloading and uploading yaml files" do
+  before do
+    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+  end
 
   it "round-trips the YAML" do
     Factory(:copycat_translation, :key => "a.foo1", :value => "bar1")
