@@ -8,7 +8,7 @@
   <p>
   Upload a YAML (.yml) file following <a href="http://guides.rubyonrails.org/i18n.html">I18n conventions</a>. 
   </p>
-  <%= form_tag 'import_yaml', :multipart => true do -%>
+  <%= form_tag 'import_yaml', :multipart => true, :'accept-charset' => 'UTF-8' do -%>
     <%= file_field_tag "file" %>
     <%= submit_tag "Upload" %>
   <% end %>

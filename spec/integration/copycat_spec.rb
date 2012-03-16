@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 require 'spec_helper'
 
 feature "use #t" do
@@ -64,6 +66,21 @@ feature "downloading and uploading yaml files" do
     assert CopycatTranslation.find_by_key("a.b.foo3").value == "bar3"
     assert CopycatTranslation.find_by_key("c.foo4").value == "bar4"
     assert CopycatTranslation.find_by_key(2).value == "bar5"
+  end
+
+  it "round-trips the yaml with complicated text" do
+    Factory(:copycat_translation, :key => "a.foo", :value => "“hello world“ üokåa®fgsdf;::fs;kdf")
+    visit "/copycat_translations.yaml"
+    CopycatTranslation.destroy_all
+    yaml = page.text
+    file = Tempfile.new 'copycat'
+    file.write yaml
+    file.close
+    visit upload_copycat_translations_path
+    attach_file "file", file.path
+    click_button "Upload"
+    file.unlink
+    assert CopycatTranslation.find_by_key("a.foo").value == "“hello world“ üokåa®fgsdf;::fs;kdf"
   end
 
   it "gives 400 on bad upload" do
