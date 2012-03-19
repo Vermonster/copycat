@@ -9,3 +9,4 @@ spec/dummy/db/schema.rb
 spec/dummy/db/migrate/
 spec/dummy/log/
 spec/dummy/tmp/
+.DS_Store

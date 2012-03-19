@@ -29,6 +29,7 @@
 #copycat table tr td.key {
   width: 20%;
   margin-right: 5%;
+  vertical-align: top;
 }
 #copycat table tr td.value {
   width: 75%;
