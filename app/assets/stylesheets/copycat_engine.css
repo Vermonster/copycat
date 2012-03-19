@@ -48,4 +48,16 @@ div#copycat {
   color: green;
   font-weight: bold;
 }
-
+#copycat div.copycat-edit-form {
+  width: 50%;
+}
+#copycat div.copycat-edit-form textarea {
+  font-size: 0.8em;
+  width: 99%;
+  margin-top: 1em;
+}
+#copycat div.copycat-edit-form input {
+  margin-top: 0.5em;
+  float: right;
+  font-size: 1em;
+}
