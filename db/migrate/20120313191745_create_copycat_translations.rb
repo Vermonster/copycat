@@ -6,7 +6,7 @@ class CreateCopycatTranslations < ActiveRecord::Migration
       t.timestamps
     end
     change_table :copycat_translations do |t|
-      t.index :key
+      t.index :key, :unique => true
     end
   end
 

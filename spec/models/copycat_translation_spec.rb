@@ -2,6 +2,22 @@
 require 'spec_helper'
 
 describe CopycatTranslation do
+  
+  describe "helper methods" do
+    it "flattens hashes" do
+      before = {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i", "j" => "k"}, "l" => "m"}}
+      after = CopycatTranslation.hash_flatten(before)
+      assert after == {"a.b" => "c", "a.d" => "e", "f.g.h" => "i", "f.g.j" => "k", "f.l" => "m"}
+    end
+
+    it "fattens hashes" do
+      before = {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i"}, "l" => "m"}}
+      keys = "f.g.j".split(".")
+      value = "k"
+      after = CopycatTranslation.hash_fatten(before, keys, value)
+      assert after == {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i", "j" => "k"}, "l" => "m"}}
+    end
+  end
 
   it "imports YAML" do
     Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")

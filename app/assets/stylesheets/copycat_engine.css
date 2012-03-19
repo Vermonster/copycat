@@ -59,4 +59,5 @@ div#copycat {
 #copycat div.copycat-edit-form input {
   margin-top: 0.5em;
   font-size: 1em;
+  float: right;
 }
