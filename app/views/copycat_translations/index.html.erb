@@ -7,7 +7,7 @@
   <% @copycat_translations.each do |t| %>
   <tr>
     <td class="key">
-      <%= link_to t.key, edit_copycat_translation_path(t) %>
+      <%= link_to "#{t.locale}.#{t.key}", edit_copycat_translation_path(t) %>
     </td>
     <td class="value">
       <%= t.value %>

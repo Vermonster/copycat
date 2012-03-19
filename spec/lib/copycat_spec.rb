@@ -31,12 +31,12 @@ describe Copycat do
     end
     it "returns copycat_translation if present" do
       cct = FactoryGirl.create(:copycat_translation)
-      base.lookup(nil, cct.key).should == cct.value
+      base.lookup(cct.locale, cct.key).should == cct.value
     end
     it "creates copycat_translation if one is missing" do
-      CopycatTranslation.find_by_key('foo').should be_nil
-      base.lookup(nil, 'foo')
-      CopycatTranslation.find_by_key('foo').should_not be_nil
+      CopycatTranslation.where(locale: 'en', key: 'foo').should be_empty
+      base.lookup('en', 'foo')
+      CopycatTranslation.where(locale: 'en', key: 'foo').should_not be_empty
     end
   end
 

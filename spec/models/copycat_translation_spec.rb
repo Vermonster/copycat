@@ -2,6 +2,16 @@
 require 'spec_helper'
 
 describe CopycatTranslation do
+
+  describe "database constraints" do
+    it "validates uniqueness of key & locale" do
+      CopycatTranslation.new(key: "foo", locale: "en", value: "bar").save
+      a = CopycatTranslation.new(key: "foo", locale: "en", value: "bar2")
+      expect { a.save }.should raise_error
+      b = CopycatTranslation.new(key: "foo", locale: "fa", value: "bar")
+      expect { b.save }.should_not raise_error
+    end
+  end
   
   describe "helper methods" do
     it "flattens hashes" do
@@ -11,11 +21,11 @@ describe CopycatTranslation do
     end
 
     it "fattens hashes" do
-      before = {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i"}, "l" => "m"}}
+      hash = {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i"}, "l" => "m"}}
       keys = "f.g.j".split(".")
       value = "k"
-      after = CopycatTranslation.hash_fatten(before, keys, value)
-      assert after == {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i", "j" => "k"}, "l" => "m"}}
+      CopycatTranslation.hash_fatten!(hash, keys, value)
+      assert hash == {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i", "j" => "k"}, "l" => "m"}}
     end
   end
 
@@ -43,7 +53,7 @@ describe CopycatTranslation do
     it "can be consumed by i18N" do
       I18n.t('site.title').should_not == 'My Blog'
       CopycatTranslation.destroy_all
-      CopycatTranslation.create(key: 'site.title', value: 'My Blog')
+      CopycatTranslation.create(key: 'site.title', value: 'My Blog', locale: 'en')
       data = YAML.load(CopycatTranslation.export_yaml)
       CopycatTranslation.destroy_all
       data.each { |locale, d| I18n.backend.store_translations(locale, d || {}) } #i18n/backend/base.rb:159

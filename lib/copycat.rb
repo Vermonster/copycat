@@ -4,7 +4,7 @@ module CopycatImplementation
   # this method overrides part of the i18n gem, lib/i18n/backend/simple.rb
   def lookup(locale, key, scope = [], options = {})
     begin
-      cct = CopycatTranslation.find_by_key(key)
+      cct = CopycatTranslation.where(locale: locale, key: key).first
     rescue ActiveRecord::StatementInvalid
       raise if CopycatTranslation.table_exists?  
       #assert Rails is initializing for the purpose of running the copycat_translations migration
@@ -13,7 +13,7 @@ module CopycatImplementation
       return cct.value if cct
       value = super(locale, key, scope, options)
       if value.is_a?(String) || value.nil?
-        CopycatTranslation.create(key: key, value: value)
+        CopycatTranslation.create(locale: locale, key: key, value: value)
       end
       value
     end
