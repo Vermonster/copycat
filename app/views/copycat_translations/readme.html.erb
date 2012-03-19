@@ -1,38 +1,30 @@
-<div id="copycat">
-<ul>
-  <li><h2>Copycat</h2></li>
-  <% href = copycat_translations_path %>
-  <li><a href=<%=href%>>Back</a></li>
-</ul>
+<div id="readme">
 
-  <div id="readme">
+  <div class="section">
+    <h2> Copycat </h2>
+    <p>Copycat is a Ruby on Rails engine that allows you to edit live website copy.</p>
+  </div>
 
-    <div class="section">
-      <h2> Copycat </h2>
-      <p>Copycat is a Ruby on Rails engine that allows you to edit live website copy.</p>
-    </div>
+  <div class="section">
+    <h2> How to use </h2>
+    <p>The values you see here correspond to literal HTML copy text in different parts of the parent website. When you edit them, the text on the website will change. Use ctrl-f or command-f to search for text, then click the left hand side links to edit. </p>
+  </div>
 
-    <div class="section">
-      <h2> How to use </h2>
-      <p>The values you see here correspond to literal HTML copy text in different parts of the parent website. When you edit them, the text on the website will change. Use ctrl-f or command-f to search for text, then click the left hand side links to edit. </p>
-    </div>
+  <div class="section">
+    <h2> Importing and Exporting </h2>
+    <p> Copycat text is data--not code. By default, Copycat values are stored in your server's database, and not the codebase that powers your website. Therefore, you may have to download/upload Copycat data to transfer your copy edits between servers, or to safeguard them between database wipes. Copycat exports (and is able to re-import) all of its data in a format called "YAML."</p> 
+    <h4> Downloading </h4>
+    <p>You can get a YAML file of all your copy by clicking "Download" on the main Copycat page.</p>
+    <h4> Uploading </h4>
+    <p>You can upload copy to Copycat by clicking "Upload" on the main page and uploading a properly formatted YAML file. Uploading copy won't delete any entries from Copycat, but it may update them or create new ones. Use this feature to mass-update your copy from between servers -- e.g., make changes to copy on a test server, and then when you're satisfied, download the YAML file and upload it to your production site. Downloading your copy as YAML and then immediately re-uploading it will leave your copy unchanged.</p>
+    <h4> Commiting copy to your codebase </h4>
+    <p>If you're pretty happy with your copy and don't expect to need to update it live anymore, or just want a bit more security, you can download your copy as YAML and include it as part of the Ruby on Rails application underneath your main website. You can then remove Copycat from the application entirely, and the website will still run exactly as before--it interfaces with Ruby on Rails's built-in translation mechanisms in a very unobtrusive way.
+  </div>
 
-    <div class="section">
-      <h2> Importing and Exporting </h2>
-      <p> Copycat text is data--not code. By default, Copycat values are stored in your server's database, and not the codebase that powers your website. Therefore, you may have to download/upload Copycat data to transfer your copy edits between servers, or to safeguard them between database wipes. Copycat exports (and is able to re-import) all of its data in a format called "YAML."</p> 
-      <h4> Downloading </h4>
-      <p>You can get a YAML file of all your copy by clicking "Download" on the main Copycat page.</p>
-      <h4> Uploading </h4>
-      <p>You can upload copy to Copycat by clicking "Upload" on the main page and uploading a properly formatted YAML file. Uploading copy won't delete any entries from Copycat, but it may update them or create new ones. Use this feature to mass-update your copy from between servers -- e.g., make changes to copy on a test server, and then when you're satisfied, download the YAML file and upload it to your production site. Downloading your copy as YAML and then immediately re-uploading it will leave your copy unchanged.</p>
-      <h4> Commiting copy to your codebase </h4>
-      <p>If you're pretty happy with your copy and don't expect to need to update it live anymore, or just want a bit more security, you can download your copy as YAML and include it as part of the Ruby on Rails application underneath your main website. You can then remove Copycat from the application entirely, and the website will still run exactly as before--it interfaces with Ruby on Rails's built-in translation mechanisms in a very unobtrusive way.
-    </div>
-
-    <div class="section">
-      <h2> About </h2>
-      <p>Copycat is a product of <a href="http://www.vermonster.com">Vermonster LLC</a>. Thanks for using!</p>
-    </div>
-
+  <div class="section">
+    <h2> About </h2>
+    <p>Copycat is a product of <a href="http://www.vermonster.com">Vermonster LLC</a>. Thanks for using!</p>
   </div>
 
 </div>
+

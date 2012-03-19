@@ -1,11 +1,20 @@
+body.copycat {
+  margin: 0;
+}
+div#copycat { 
+  width: 75%;
+  margin-left: 10.5%;
+  padding-left: 2%;
+  margin-right: 10.5%;
+  padding-right: 2%;
+}
+#copycat ul {
+  padding-left: 0;
+  padding-top: 2em;
+}
 #copycat li, #copycat li h2 {
   display: inline;
-  padding: 2em;
-}
-#copycat table, #copycat div.copycat-alert, #copycat div.copycat-notice, div#readme, div#upload {
-  width: 75%;
-  margin-left: 12.5%;
-  margin-right: 12.5%;
+  padding-right: 4em;
 }
 #copycat table, #copycat form, #copycat div.copycat-alert, #copycat div.copycat-notice, div#readme, div#upload {
   padding-top: 2em;
@@ -22,9 +31,6 @@
   padding-top: 1em;
   padding-bottom: 1em;
   border-top: 1px #CCC dotted;
-}
-#copycat table tr td.last {
-  border-bottom: none;
 }
 #copycat table tr td.key {
   width: 20%;
