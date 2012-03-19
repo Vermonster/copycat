@@ -4,10 +4,15 @@ require 'spec_helper'
 
 feature "use #t" do
 
+  it "the dummy app has a translation for site.index.header but not site.index.intro" do
+    I18n.t('site.index.header').should == 'The Header'
+    I18n.t('site.index.intro').should == "translation missing: en.site.index.intro"
+  end
+
   it "uses i18n.t" do
     visit root_path
     page.should have_content 'The Header'
-    page.should have_content 'site.index.intro'
+    page.should have_content 'Intro' #ActionView::Helpers::TranslationHelper#translate wrapper 
   end
 
   it "creates a copycat_translation if the yaml has an entry" do

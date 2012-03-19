@@ -32,8 +32,10 @@ module CopycatImplementation
       super 
     else
       return cct.value if cct
-      value = super(locale, key, scope = [], options = {}) || key.to_s
-      CopycatTranslation.create(key: key, value: value) if value.is_a?(String)
+      value = super(locale, key, scope, options)
+      if value.is_a?(String) || value.nil?
+        CopycatTranslation.create(key: key, value: value)
+      end
       value
     end
   end

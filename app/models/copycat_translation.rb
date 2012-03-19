@@ -1,7 +1,6 @@
 class CopycatTranslation < ActiveRecord::Base
 
-  validates :key, :value, :presence => true
-  validates :key, :uniqueness => true
+  validates :key, :presence => true, :uniqueness => true
   
   def self.import_yaml(yaml)
     hash = YAML.load(yaml)
