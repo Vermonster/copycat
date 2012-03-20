@@ -4,4 +4,5 @@ Rails.application.routes.draw do
     get 'upload', :on => :collection
     post 'import_yaml', :on => :collection
   end
+  post 'copycat_translations', :to => "copycat_translations#change_locale"
 end

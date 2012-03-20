@@ -62,3 +62,14 @@ div#copycat {
   font-size: 1em;
   float: right;
 }
+#copycat div.copycat-locale-form {
+  float: right;
+  position: relative;
+  top: -4.5em;
+}
+#copycat div.copycat-locale-form select, div.copycat-locale-form input {
+  font-size: 1em;
+}
+#copycat div.copycat-locale-form select:hover, div.copycat-locale-form input:hover {
+  cursor: pointer;
+}

@@ -1,3 +1,9 @@
+<div class="copycat-locale-form">
+  <%= form_tag do -%>
+    <%= submit_tag 'Change Locale' %>
+    <%= select_tag 'locale', options_for_select(@locales.map{|l| [l,l]}, @current_locale) %>
+  <% end %>
+</div>
 <div class="copycat-notice"> <%= notice %> </div>
 <table>
   <tr>
@@ -7,7 +13,7 @@
   <% @copycat_translations.each do |t| %>
   <tr>
     <td class="key">
-      <%= link_to "#{t.locale}.#{t.key}", edit_copycat_translation_path(t) %>
+      <%= link_to "#{t.key}", edit_copycat_translation_path(t) %>
     </td>
     <td class="value">
       <%= t.value %>

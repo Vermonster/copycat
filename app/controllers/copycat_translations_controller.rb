@@ -5,7 +5,9 @@ class CopycatTranslationsController < ApplicationController
   layout 'copycat'
 
   def index
-    @copycat_translations = CopycatTranslation.all
+    @current_locale = params["locale"] || I18n.locale
+    @copycat_translations = CopycatTranslation.where(locale: @current_locale)
+    @locales = CopycatTranslation.all.map(&:locale).uniq
     respond_to do |format|
       format.html
       format.yaml { send_data CopycatTranslation.export_yaml, :filename => "copycat_translations_#{Time.now.strftime("%Y_%m_%d_%H_%M_%S")}.yml" }
@@ -20,7 +22,6 @@ class CopycatTranslationsController < ApplicationController
     cct = CopycatTranslation.find_by_id(params["id"])
     cct.value = params["copycat_translation"]["value"]
     if cct.save
-      @copycat_translations = CopycatTranslation.all
       redirect_to copycat_translations_path
     else
       @copycat_translation = cct
@@ -43,6 +44,10 @@ class CopycatTranslationsController < ApplicationController
     else
       redirect_to copycat_translations_path, :notice => "YAML file uploaded successfully!"
     end
+  end
+
+  def change_locale
+    redirect_to "#{copycat_translations_path}?locale=#{params["locale"]}"
   end
 
 end
