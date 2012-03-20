@@ -3,7 +3,7 @@ require "copycat/engine"
 module CopycatImplementation
   # this method overrides part of the i18n gem, lib/i18n/backend/simple.rb
   def lookup(locale, key, scope = [], options = {})
-    return super unless ActiveRecord::Base.connected?
+    return super unless ActiveRecord::Base.connected? && CopycatTranslation.table_exists?
     cct = CopycatTranslation.where(locale: locale, key: key).first
     return cct.value if cct
     value = super(locale, key, scope, options)
