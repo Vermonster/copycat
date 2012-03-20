@@ -7,7 +7,7 @@ class CopycatTranslationsController < ApplicationController
   def index
     @current_locale = params["locale"] || I18n.locale.to_s
     @copycat_translations = CopycatTranslation.where(locale: @current_locale)
-    @locales = (CopycatTranslation.all.map(&:locale) << @current_locale).uniq
+    @locales = CopycatTranslation.all.map(&:locale).uniq
     respond_to do |format|
       format.html
       format.yaml { send_data CopycatTranslation.export_yaml, :filename => "copycat_translations_#{Time.now.strftime("%Y_%m_%d_%H_%M_%S")}.yml" }
