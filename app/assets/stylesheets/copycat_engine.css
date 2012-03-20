@@ -20,6 +20,7 @@ div#copycat {
   padding-top: 2em;
 }
 #copycat table {
+  width: 100%;
   border-bottom: 1px #CCC dotted;
   padding-bottom: 1em;
 }
