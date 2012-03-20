@@ -89,8 +89,6 @@ feature "downloading and uploading yaml files" do
   end
 
   it "gives 400 on bad upload" do
-    visit "/copycat_translations.yaml"
-
     file = Tempfile.new 'copycat'
     file.write "<<<%%#$W%s"
     file.close
@@ -106,3 +104,64 @@ feature "downloading and uploading yaml files" do
 
 end
 
+feature "locales" do
+
+  it "displays different text based on users' locale" do
+    Factory(:copycat_translation, locale: 'en', key: 'site.index.intro', value: 'world')
+    Factory(:copycat_translation, locale: 'es', key: 'site.index.intro', value: 'mundo')
+
+    I18n.locale = :en
+    visit root_path
+    page.should have_content 'world'
+    page.should_not have_content 'mundo'
+    
+    I18n.locale = :es
+    visit root_path
+    page.should have_content 'mundo'
+    page.should_not have_content 'world'
+    
+    I18n.locale = :fa
+    visit root_path
+    page.should_not have_content 'world'
+    page.should_not have_content 'mundo'
+
+    I18n.locale = :en  # reset
+  end
+
+  it "imports yaml containing multiple locales" do
+    file = Tempfile.new 'copycat'
+    file.write <<-YAML
+      en:
+        hello: world
+      es:
+        hello: mundo
+    YAML
+    file.close
+
+    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    visit upload_copycat_translations_path
+    attach_file "file", file.path
+    click_button "Upload"
+    file.unlink
+
+    assert CopycatTranslation.count == 2
+    a = CopycatTranslation.where(locale: 'en').first
+    assert a.key == 'hello'
+    assert a.value == 'world'
+    b = CopycatTranslation.where(locale: 'es').first
+    assert b.key == 'hello'
+    assert b.value == 'mundo'
+  end
+
+  it "exports yaml containing multiple locales" do
+    Factory(:copycat_translation, locale: 'en', key: 'hello', value: 'world')
+    Factory(:copycat_translation, locale: 'es', key: 'hello', value: 'mundo')
+
+    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    visit "/copycat_translations.yaml"
+    yaml = page.text
+    assert yaml =~ /en:\s*hello: world/
+    assert yaml =~ /es:\s*hello: mundo/  
+  end
+
+end
