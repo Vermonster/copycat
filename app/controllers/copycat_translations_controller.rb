@@ -5,32 +5,17 @@ class CopycatTranslationsController < ApplicationController
   layout 'copycat'
 
   def index
+    @locale_names = CopycatTranslation.find(:all, select: 'distinct locale').map(&:locale)
     
-    #locale
-    # 1. not on URL at all
-    #   - set to default_locale
-    # 2. present but blank 
-    # 3. present with value
-
-
-    #search
-    # 1. not on URL at all
-    #  - show nothing
-    # 2. present but blank
-    #  - show everything
-    #    - L1 got set to default locale
-    #    - L2 show for all locales
-    #    - L3 scope to one locale
-    # 3. present with value
-    #  - show matching
-    #    - L1 got set to default locale
-    #    - L2 show for all locales
-    #    - L3 scope to one locale
-
-    
-    params[:locale] = I18n.default_locale unless params.has_key?(:locale)
-    query = CopycatTranslation
-    query = query.where(locale: params[:locale]) unless params[:locale].blank?
+    if params.has_key?(:locale)
+      if (locale = params[:locale]).blank?
+        query = CopycatTranslation
+      else
+        query = CopycatTranslation.where(locale: locale)
+      end
+    else
+      query = CopycatTranslation.where(locale: I18n.default_locale)
+    end
 
     if params.has_key?(:search)
       if (search = params[:search]).blank?
@@ -41,8 +26,6 @@ class CopycatTranslationsController < ApplicationController
     else
       @copycat_translations = []
     end
-
-    @locale_names = CopycatTranslation.find(:all, select: 'distinct locale').map(&:locale)
   end
 
   def edit
@@ -67,8 +50,8 @@ class CopycatTranslationsController < ApplicationController
   end
 
   def download
-    send_data CopycatTranslation.export_yaml, 
-      :filename => "copycat_translations_#{Time.now.strftime("%Y_%m_%d_%H_%M_%S")}.yml"
+    filename = "copycat_translations_#{Time.now.strftime("%Y_%m_%d_%H_%M_%S")}.yml"
+    send_data CopycatTranslation.export_yaml, :filename => filename
   end
 
   def upload
