@@ -65,21 +65,132 @@ feature "copycat index" do
   end
 
   context "more than one locale" do
-    xit "scopes to locale" do
-      Factory(:copycat_translation, :key => "füi", :value => "bäri", :locale => "it")
-      click_link 'Show all'
-      page.should have_content 'foo'
-      page.should have_content 'bar'
-      page.should_not have_content 'füi'
-      page.should_not have_content 'bäri'
-      select 'it', :from => 'locale'
-      click_button 'Change Locale'
-      click_link 'Show all'
-      page.should have_content 'füi'
-      page.should have_content 'bäri' 
-      page.should_not have_content 'foo'
-      page.should_not have_content 'bar'
+
+    before do
+      CopycatTranslation.destroy_all
+      Factory(:copycat_translation, key: "foo", value: "bar1", locale: "en")
+      Factory(:copycat_translation, key: "foo", value: "bar2", locale: "fa")
+      Factory(:copycat_translation, key: "foo", value: "bar3", locale: "it")
     end
+
+    #locale
+    # 1. not on URL at all
+    #   - set to default_locale
+    # 2. present but blank
+    # 3. present with value
+
+    #search
+    # 1. not on URL at all
+    #  - show nothing
+    # 2. present but blank
+    #  - show everything
+    #    - L1 got set to default locale
+    #    - L2 show for all locales
+    #    - L3 scope to one locale
+    # 3. present with value
+    #  - show matching
+    #    - L1 got set to default locale
+    #    - L2 show for all locales
+    #    - L3 scope to one locale
+
+    it "nil locale, nil search" do
+      visit copycat_translations_path
+      page.should_not have_content 'foo'
+    end
+
+    it "nil locale, blank search" do
+      # impossible for user to replicate this case
+      visit "/copycat_translations?search=&commit=Search"
+      page.should have_content 'bar1'
+      page.should_not have_content 'bar2'
+      page.should_not have_content 'bar3'
+    end
+
+    it "nil locale, present search" do
+      # impossible for user to replicate this case
+      visit "/copycat_translations?search=foo&commit=Search"
+      page.should have_content 'bar1'
+      page.should_not have_content 'bar2'
+      page.should_not have_content 'bar3'
+      visit "/copycat_translations?search=fuu&commit=Search"
+      page.should_not have_content 'foo'
+    end
+
+    it "blank locale, nil search" do
+      # impossible for user to replicate this case
+      visit "/copycat_translations?locale=&commit=Search"
+      page.should_not have_content 'foo'
+    end
+
+    it "blank locale, blank search" do
+      select '', :from => 'locale'
+      click_button 'Search'
+      page.should have_content 'bar1'
+      page.should have_content 'bar2'
+      page.should have_content 'bar3'
+    end
+
+    it "blank locale, present search" do
+      select '', :from => 'locale'
+      fill_in 'search', :with => 'foo'
+      click_button 'Search'
+      page.should have_content 'bar1'
+      page.should have_content 'bar2'
+      page.should have_content 'bar3'
+      fill_in 'search', :with => 'fuu'
+      click_button 'Search'
+      page.should_not have_content 'foo'
+    end
+
+    it "present locale, nil search" do
+      # impossible for user to replicate this case
+      visit "/copycat_translations?locale=en&commit=Search"
+      page.should_not have_content 'foo'
+    end
+
+    it "present locale, blank search" do
+      select 'en', :from => 'locale'
+      click_button 'Search'
+      page.should have_content 'bar1'
+      page.should_not have_content 'bar2'
+      page.should_not have_content 'bar3'
+      select 'fa', :from => 'locale'
+      click_button 'Search'
+      page.should_not have_content 'bar1'
+      page.should have_content 'bar2'
+      page.should_not have_content 'bar3'
+      select 'it', :from => 'locale'
+      click_button 'Search'
+      page.should_not have_content 'bar1'
+      page.should_not have_content 'bar2'
+      page.should have_content 'bar3'
+    end
+
+    it "present locale, present search" do
+      select 'en', :from => 'locale'
+      fill_in 'search', :with => 'foo'
+      click_button 'Search'
+      page.should have_content 'bar1'
+      page.should_not have_content 'bar2'
+      page.should_not have_content 'bar3'
+      select 'fa', :from => 'locale'
+      fill_in 'search', :with => 'foo'
+      click_button 'Search'
+      page.should_not have_content 'bar1'
+      page.should have_content 'bar2'
+      page.should_not have_content 'bar3'
+      select 'it', :from => 'locale'
+      fill_in 'search', :with => 'foo'
+      click_button 'Search'
+      page.should_not have_content 'bar1'
+      page.should_not have_content 'bar2'
+      page.should have_content 'bar3'
+      select 'en', :from => 'locale'
+      fill_in 'search', :with => 'fuu'
+      click_button 'Search'
+      page.should_not have_content 'foo'
+    end
+
   end
 
 end
