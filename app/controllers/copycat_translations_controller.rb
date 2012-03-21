@@ -5,17 +5,9 @@ class CopycatTranslationsController < ApplicationController
   layout 'copycat'
 
   def index
-    @locale_names = CopycatTranslation.find(:all, select: 'distinct locale').map(&:locale)
-    
-    if params.has_key?(:locale)
-      if (locale = params[:locale]).blank?
-        query = CopycatTranslation
-      else
-        query = CopycatTranslation.where(locale: locale)
-      end
-    else
-      query = CopycatTranslation.where(locale: I18n.default_locale)
-    end
+    params[:locale] = I18n.default_locale unless params.has_key?(:locale)
+    query = CopycatTranslation
+    query = query.where(locale: params[:locale]) unless params[:locale].blank?
 
     if params.has_key?(:search)
       if (search = params[:search]).blank?
@@ -26,6 +18,7 @@ class CopycatTranslationsController < ApplicationController
     else
       @copycat_translations = []
     end
+    @locale_names = CopycatTranslation.find(:all, select: 'distinct locale').map(&:locale)
   end
 
   def edit
