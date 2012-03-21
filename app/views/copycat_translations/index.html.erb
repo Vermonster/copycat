@@ -1,5 +1,5 @@
 <div class="copycat-locale-form">
-  <%= form_tag do -%>
+  <%= form_tag change_locale_copycat_translations_path do -%>
     <%= submit_tag 'Change Locale' %>
     <%= select_tag 'locale', options_for_select(@locales.map{|l| [l,l]}, @current_locale) %>
   <% end %>
