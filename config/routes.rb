@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       get 'upload'
       post 'import_yaml'
       post 'change_locale'
+      post 'search'
     end
   end
 end

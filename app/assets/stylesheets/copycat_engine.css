@@ -1,6 +1,7 @@
 body.copycat {
   margin: 0;
   font-family: Helvetica, Arial, sans-serif;
+  background-color: #EEE;
 }
 div#copycat { 
   width: 75%;

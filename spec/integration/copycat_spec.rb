@@ -2,41 +2,100 @@
 
 require 'spec_helper'
 
-feature "use #t" do
 
-  it "the dummy app has a translation for site.index.header but not site.index.intro" do
-    I18n.t('site.index.header').should == 'The Header'
-    I18n.t('site.index.intro').should == "translation missing: en.site.index.intro"
+feature "copycat index" do
+ 
+  before do
+    Factory(:copycat_translation, :key => "foo", :value => "bar")
+    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    visit copycat_translations_path
   end
 
-  it "uses i18n.t" do
-    visit root_path
-    page.should have_content 'The Header'
-    page.should have_content 'Intro' #ActionView::Helpers::TranslationHelper#translate wrapper 
+  it "has a nav bar" do
+    click_link 'Upload'
+    click_link 'Readme'
+    click_link 'Copycat'
   end
 
-  it "creates a copycat_translation if the yaml has an entry" do
-    CopycatTranslation.find_by_key('site.index.header').should be_nil
-    visit root_path
-    CopycatTranslation.find_by_key('site.index.header').should_not be_nil
+  it "doesn't show any tokens by default" do
+    page.should_not have_content 'foo'
+    page.should_not have_content 'bar'
   end
 
-  it "creates a copycat_translation if the yaml does not have an entry" do
-    CopycatTranslation.find_by_key('site.index.intro').should be_nil
-    visit root_path
-    CopycatTranslation.find_by_key('site.index.intro').should_not be_nil
+  it "allows search by key" do
+    fill_in 'show_like', :with => 'foo'
+    click_button 'Search'
+    page.should have_content 'foo'
+    page.should have_content 'bar'
   end
 
-  it "shows the copycat_translation instead of the yaml" do
-    FactoryGirl.create(:copycat_translation, key: 'site.index.header', value: 'A different header')
-    visit root_path
-    page.should_not have_content 'The Header'
-    page.should have_content 'A different header'
+  it "allows search by key" do
+    fill_in 'show_like', :with => 'xfoo'
+    click_button 'Search'
+    page.should_not have_content 'foo'
+    page.should_not have_content 'bar'
+  end
+
+  it "allows search by value" do
+    fill_in 'show_like', :with => 'bar'
+    click_button 'Search'
+    page.should have_content 'foo'
+    page.should have_content 'bar'
+  end
+
+  it "allows search by value" do
+    fill_in 'show_like', :with => 'xbar'
+    click_button 'Search'
+    page.should_not have_content 'foo'
+    page.should_not have_content 'bar'
+  end
+  
+  it "searches in the middles of strings" do
+    Factory(:copycat_translation, :key => "site.index.something")
+    fill_in 'show_like', :with => 'index'
+    click_button 'Search'
+    page.should have_content 'site.index.something'
+  end
+
+  xit "allows search by value with html" do
+    Factory(
+      :copycat_translation, :key => "site.index.something_html", 
+      :value => %|hello world, this <span class="foo">is my</span> test <b>string</b>|
+    )
+    fill_in 'show_link', :with => 'this is my test string'
+    page.should have_content 'site.index.something_html'
+  end
+
+  it "can show all" do
+    Factory(:copycat_translation, :key => "foe", :value => "beer")
+    click_link 'Show all'
+    page.should have_content 'foo'
+    page.should have_content 'foe'
+  end
+
+  it "scopes to locale" do
+    Factory(:copycat_translation, :key => "füi", :value => "bäri", :locale => "it")
+    click_link 'Show all'
+    page.should have_content 'foo'
+    page.should have_content 'bar'
+    page.should_not have_content 'füi'
+    page.should_not have_content 'bäri'
+    select 'it', :from => 'locale'
+    click_button 'Change Locale'
+    click_link 'Show all'
+    page.should have_content 'füi'
+    page.should have_content 'bäri' 
+    page.should_not have_content 'foo'
+    page.should_not have_content 'bar'
+  end
+
+  it "shows nothing on empty searches" do
+    click_button 'Search'
+    page.should_not have_content 'foo'
+    page.should_not have_content 'bar'
   end
 
 end
-
-require 'tempfile'
 
 feature "downloading and uploading yaml files" do
   before do
@@ -105,28 +164,6 @@ feature "downloading and uploading yaml files" do
 end
 
 feature "locales" do
-
-  it "displays different text based on users' locale" do
-    Factory(:copycat_translation, locale: 'en', key: 'site.index.intro', value: 'world')
-    Factory(:copycat_translation, locale: 'es', key: 'site.index.intro', value: 'mundo')
-
-    I18n.locale = :en
-    visit root_path
-    page.should have_content 'world'
-    page.should_not have_content 'mundo'
-    
-    I18n.locale = :es
-    visit root_path
-    page.should have_content 'mundo'
-    page.should_not have_content 'world'
-    
-    I18n.locale = :fa
-    visit root_path
-    page.should_not have_content 'world'
-    page.should_not have_content 'mundo'
-
-    I18n.locale = :en  # reset
-  end
 
   it "imports yaml containing multiple locales" do
     file = Tempfile.new 'copycat'

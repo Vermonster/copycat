@@ -5,19 +5,32 @@
   <% end %>
 </div>
 <div class="copycat-notice"> <%= notice %> </div>
-<table>
-  <tr>
-    <th> Key </th>
-    <th> Value </th>
-  </tr>
-  <% @copycat_translations.each do |t| %>
-  <tr>
-    <td class="key">
-      <%= link_to "#{t.key}", edit_copycat_translation_path(t) %>
-    </td>
-    <td class="value">
-      <%= t.value %>
-    </td>
-  </tr>
-  <% end %>
-</table>
+
+<div class="copycat-search">
+  <span> Search </span>
+  <%= form_tag "#{search_copycat_translations_path}?locale=#{@current_locale}" do -%>
+    <%= label_tag 'show_like', 'Search for text:' %>
+    <%= text_field_tag 'show_like' %>
+    <%= submit_tag 'Search' %>
+  <% end %>  
+  <a href=<%="#{copycat_translations_path}?locale=#{@current_locale}&show_all=true"%>>Show all</a>
+</div>
+
+<% if @copycat_translations.present? %>
+  <table>
+    <tr>
+      <th> Key </th>
+      <th> Value </th>
+    </tr>
+    <% @copycat_translations.each do |t| %>
+    <tr>
+      <td class="key">
+        <%= link_to "#{t.key}", edit_copycat_translation_path(t) %>
+      </td>
+      <td class="value">
+        <%= t.value %>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+<% end %>

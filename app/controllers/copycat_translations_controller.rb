@@ -6,7 +6,12 @@ class CopycatTranslationsController < ApplicationController
 
   def index
     @current_locale = params["locale"] || I18n.locale.to_s
-    @copycat_translations = CopycatTranslation.where(locale: @current_locale)
+    @copycat_translations = []
+    if params["show_all"]
+      @copycat_translations = CopycatTranslation.where(locale: @current_locale)
+    elsif (query = params["show_like"]) && query.present?
+      @copycat_translations = CopycatTranslation.where(locale: @current_locale).where("key LIKE ? OR value LIKE ?", "%#{query}%", "%#{query}%")
+    end
     @locales = CopycatTranslation.all.map(&:locale).uniq
     respond_to do |format|
       format.html
@@ -48,6 +53,16 @@ class CopycatTranslationsController < ApplicationController
 
   def change_locale
     redirect_to "#{copycat_translations_path}?locale=#{params["locale"]}"
+  end
+
+  def search
+    url = "#{copycat_translations_path}?locale=#{params["locale"]}"
+    if params["show_all"]
+      url += "&show_all=true" 
+    elsif params["show_like"]
+      url += "&show_like=#{params["show_like"]}"
+    end
+    redirect_to url
   end
 
 end
