@@ -1,6 +1,6 @@
 # Copycat #
 
-Copycat is a Rails engine that lets non-developers edit live website copy.
+Copycat is a Rails engine that allows users to edit live website copy.
 
 ## How to use ##
 
@@ -30,11 +30,15 @@ You can read about the Rails internationalization framework [here](http://guides
 
 ## Deploying ##
 
-If you make copy edits on a staging server and want to transfer your changes to a production server, you can download your copy as YAML on the staging server and upload it to the production server via the web interface. If you want to mass-update only a limited set of copy values, you can upload a partial YAML file that just contains the keys and values for those particular objects.
+To transfer changes from staging to production:
 
-Since this process requires no code commits, non-developers can also transfer changes.
+* Download copy as YAML on staging
+* Login to Copycat on production
+* Upload YAML to production
 
-You can, however, commit Copycat's YAML export to your git repository, and if there are not pre-existing database records with the same keys, Copycat will detect them. Copycat does make the database the authoritative source of copy, but if you export Copycat translations to YAML, commit the YAML to `config/locales`, and remove Copycat from the application entirely, the website, to end users, will remain the same.
+Since this process requires no code commits, non-developers can also 'deploy' copy changes.
+
+You can also commit Copycat's YAML export, which is compatible with i18n, to your git repository.
 
 ## Developing ##
 
