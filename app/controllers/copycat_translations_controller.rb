@@ -43,7 +43,7 @@ class CopycatTranslationsController < ApplicationController
     end
   end
 
-  def readme
+  def help
   end
 
   def import_export

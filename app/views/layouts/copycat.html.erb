@@ -5,17 +5,22 @@
   <%= stylesheet_link_tag "copycat_engine", :media => "all" %>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-<body class="copycat">
-  <div id="copycat">
-    <div class="copycat-header">
+<body>
+  <div id="page">
+    <div id="header">
+      <h1>Copycat</h1>
       <ul>
-        <li><a href=<%=copycat_translations_path%>><h2>Copycat</h2></a></li>
-        <li><a href=<%= import_export_copycat_translations_path %>>Import / Export</a></li>
-        <li><a href=<%= readme_copycat_translations_path %>>Readme</a></li>
+        <li><%= link_to "Search", copycat_translations_path%></li>
+        <li><%= link_to "Import / Export", import_export_copycat_translations_path%></li>
+        <li><%= link_to "Help", help_copycat_translations_path%></li>
       </ul>
     </div>
+    <% if notice %>
+      <div id="notice">
+        <%= notice %>
+      </div>
+    <% end %>
     <%= yield %>
   </div>
-
 </body>
 </html>

@@ -13,8 +13,8 @@ feature "copycat index" do
 
   it "has a nav bar" do
     click_link 'Import / Export'
-    click_link 'Readme'
-    click_link 'Copycat'
+    click_link 'Help'
+    click_link 'Search'
   end
 
   it "doesn't show any tokens by default" do

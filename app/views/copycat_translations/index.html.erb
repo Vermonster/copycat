@@ -1,6 +1,4 @@
-<div class="copycat-notice"> <%= notice %> </div>
-
-<div class="copycat-search">
+<div id="search">
   <%= form_tag copycat_translations_path, :method => :get do -%>
     <% locale_options = options_for_select([nil] + @locale_names.map{|l| [l,l]}, params[:locale]) %>
     <%= select_tag 'locale', locale_options %>
