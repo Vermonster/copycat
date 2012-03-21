@@ -1,4 +1,4 @@
-<div class="copycat-edit-form">
+<div class="edit">
 <%= form_for @copycat_translation, :url => { :action => "update" }, :html => {:class => "copycat_translation"} do |f| %>
   <span class="copycat-edit-form-key"><%= @copycat_translation.key %></span>
   <br>
@@ -6,4 +6,5 @@
   <br>
   <%= f.submit "Update" %>
 <% end %>
+<%= link_to "Cancel", copycat_translations_path %>
 </div>
