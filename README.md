@@ -1,6 +1,6 @@
 # Copycat #
 
-Copycat is a Rails engine that allows editing live website copy.
+Copycat is a Rails engine that lets non-developers edit live website copy.
 
 ## How to use ##
 
@@ -13,6 +13,8 @@ rake copycat:install
 rake db:migrate
 ```
 
+Since Copycat data is stored locally on an indexed table with no foreign keys, page loads are very fast and changes appear instantly.
+
 In a view, use the Rails i18N.translate() method where you would like to display some editable copy:
 
 
@@ -20,7 +22,7 @@ In a view, use the Rails i18N.translate() method where you would like to display
 <h1><%= t('site.index.header') %></h1>
 ```
 
-Visit the page in your browser, and a Copycat translation will be created for the key. Then visit '/copycat_translations' in your browser and you can edit the value of that token.
+Visit the page in your browser, and a Copycat translation will be created for the key. Then visit '/copycat_translations' in your browser, log in with the username and password generated in `config/initializers/copycat.rb`, and you can edit the value of that token.
 
 ## Rails i18N API ##
 
@@ -28,7 +30,11 @@ You can read about the Rails internationalization framework [here](http://guides
 
 ## Deploying ##
 
+If you make copy edits on a staging server and want to transfer your changes to a production server, you can download your copy as YAML on the staging server and upload it to the production server via the web interface. If you want to mass-update only a limited set of copy values, you can upload a partial YAML file that just contains the keys and values for those particular objects.
 
+Since this process requires no code commits, non-developers can also transfer changes.
+
+You can, however, commit Copycat's YAML export to your git repository, and if there are not pre-existing database records with the same keys, Copycat will detect them. Copycat does make the database the authoritative source of copy, but if you export Copycat translations to YAML, commit the YAML to `config/locales`, and remove Copycat from the application entirely, the website, to end users, will remain the same.
 
 ## Developing ##
 
