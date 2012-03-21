@@ -6,7 +6,7 @@ FactoryGirl.define do
   factory :copycat_translation do
     key { Factory.next(:string) }
     value { Factory.next(:string) }
-    locale { "en" }
+    locale I18n.default_locale
   end
 end
 

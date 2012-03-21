@@ -1,22 +1,15 @@
-<div class="copycat-locale-form">
-  <%= form_tag change_locale_copycat_translations_path do -%>
-    <%= submit_tag 'Change Locale' %>
-    <%= select_tag 'locale', options_for_select(@locales.map{|l| [l,l]}, @current_locale) %>
-  <% end %>
-</div>
 <div class="copycat-notice"> <%= notice %> </div>
 
 <div class="copycat-search">
-  <span> Search </span>
-  <%= form_tag "#{search_copycat_translations_path}?locale=#{@current_locale}" do -%>
-    <%= label_tag 'show_like', 'Search for text:' %>
-    <%= text_field_tag 'show_like' %>
+  <%= form_tag copycat_translations_path, :method => :get do -%>
+    <% locale_options = options_for_select([nil] + @locale_names.map{|l| [l,l]}, params[:locale]) %>
+    <%= select_tag 'locale', locale_options %>
+    <%= text_field_tag :search, params[:search], :placeholder => 'Search for keys or values', :size => 40 %>
     <%= submit_tag 'Search' %>
   <% end %>  
-  <a href=<%="#{copycat_translations_path}?locale=#{@current_locale}&show_all=true"%>>Show all</a>
 </div>
 
-<% if @copycat_translations.present? %>
+<% if @copycat_translations.any? %>
   <table>
     <tr>
       <th> Key </th>

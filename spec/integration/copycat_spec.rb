@@ -12,7 +12,7 @@ feature "copycat index" do
   end
 
   it "has a nav bar" do
-    click_link 'Upload'
+    click_link 'Import / Export'
     click_link 'Readme'
     click_link 'Copycat'
   end
@@ -23,28 +23,28 @@ feature "copycat index" do
   end
 
   it "allows search by key" do
-    fill_in 'show_like', :with => 'foo'
+    fill_in 'search', :with => 'foo'
     click_button 'Search'
     page.should have_content 'foo'
     page.should have_content 'bar'
   end
 
   it "allows search by key" do
-    fill_in 'show_like', :with => 'xfoo'
+    fill_in 'search', :with => 'xfoo'
     click_button 'Search'
     page.should_not have_content 'foo'
     page.should_not have_content 'bar'
   end
 
   it "allows search by value" do
-    fill_in 'show_like', :with => 'bar'
+    fill_in 'search', :with => 'bar'
     click_button 'Search'
     page.should have_content 'foo'
     page.should have_content 'bar'
   end
 
   it "allows search by value" do
-    fill_in 'show_like', :with => 'xbar'
+    fill_in 'search', :with => 'xbar'
     click_button 'Search'
     page.should_not have_content 'foo'
     page.should_not have_content 'bar'
@@ -52,47 +52,34 @@ feature "copycat index" do
   
   it "searches in the middles of strings" do
     Factory(:copycat_translation, :key => "site.index.something")
-    fill_in 'show_like', :with => 'index'
+    fill_in 'search', :with => 'index'
     click_button 'Search'
     page.should have_content 'site.index.something'
   end
 
-  xit "allows search by value with html" do
-    Factory(
-      :copycat_translation, :key => "site.index.something_html", 
-      :value => %|hello world, this <span class="foo">is my</span> test <b>string</b>|
-    )
-    fill_in 'show_link', :with => 'this is my test string'
-    page.should have_content 'site.index.something_html'
-  end
-
   it "can show all" do
     Factory(:copycat_translation, :key => "foe", :value => "beer")
-    click_link 'Show all'
+    click_button 'Search'
     page.should have_content 'foo'
     page.should have_content 'foe'
   end
 
-  it "scopes to locale" do
-    Factory(:copycat_translation, :key => "füi", :value => "bäri", :locale => "it")
-    click_link 'Show all'
-    page.should have_content 'foo'
-    page.should have_content 'bar'
-    page.should_not have_content 'füi'
-    page.should_not have_content 'bäri'
-    select 'it', :from => 'locale'
-    click_button 'Change Locale'
-    click_link 'Show all'
-    page.should have_content 'füi'
-    page.should have_content 'bäri' 
-    page.should_not have_content 'foo'
-    page.should_not have_content 'bar'
-  end
-
-  it "shows nothing on empty searches" do
-    click_button 'Search'
-    page.should_not have_content 'foo'
-    page.should_not have_content 'bar'
+  context "more than one locale" do
+    xit "scopes to locale" do
+      Factory(:copycat_translation, :key => "füi", :value => "bäri", :locale => "it")
+      click_link 'Show all'
+      page.should have_content 'foo'
+      page.should have_content 'bar'
+      page.should_not have_content 'füi'
+      page.should_not have_content 'bäri'
+      select 'it', :from => 'locale'
+      click_button 'Change Locale'
+      click_link 'Show all'
+      page.should have_content 'füi'
+      page.should have_content 'bäri' 
+      page.should_not have_content 'foo'
+      page.should_not have_content 'bar'
+    end
   end
 
 end
@@ -110,7 +97,8 @@ feature "downloading and uploading yaml files" do
     Factory(:copycat_translation, :key => 2, :value => "bar5")
     assert CopycatTranslation.count == 5
 
-    visit "/copycat_translations.yaml"
+    visit import_export_copycat_translations_path
+    click_link 'Download as YAML'
     CopycatTranslation.destroy_all
     assert CopycatTranslation.count == 0
 
@@ -119,7 +107,7 @@ feature "downloading and uploading yaml files" do
     file.write yaml
     file.close
 
-    visit upload_copycat_translations_path
+    visit import_export_copycat_translations_path
     attach_file "file", file.path
     click_button "Upload"
     file.unlink
@@ -133,18 +121,23 @@ feature "downloading and uploading yaml files" do
   end
 
   it "round-trips the yaml with complicated text" do
-    Factory(:copycat_translation, :key => "a.foo", :value => "“hello world“ üokåa®fgsdf;::fs;kdf")
-    visit "/copycat_translations.yaml"
+    value = "“hello world“ üokåa®fgsdf;::fs;kdf"
+    Factory(:copycat_translation, :key => "a.foo", :value => value)
+
+    visit import_export_copycat_translations_path
+    click_link 'Download as YAML'
     CopycatTranslation.destroy_all
+
     yaml = page.text
     file = Tempfile.new 'copycat'
     file.write yaml
     file.close
-    visit upload_copycat_translations_path
+
+    visit import_export_copycat_translations_path
     attach_file "file", file.path
     click_button "Upload"
     file.unlink
-    assert CopycatTranslation.find_by_key("a.foo").value == "“hello world“ üokåa®fgsdf;::fs;kdf"
+    assert CopycatTranslation.find_by_key("a.foo").value == value
   end
 
   it "gives 400 on bad upload" do
@@ -152,7 +145,7 @@ feature "downloading and uploading yaml files" do
     file.write "<<<%%#$W%s"
     file.close
 
-    visit upload_copycat_translations_path
+    visit import_export_copycat_translations_path
     attach_file "file", file.path
     click_button "Upload"
     file.unlink
@@ -164,6 +157,10 @@ feature "downloading and uploading yaml files" do
 end
 
 feature "locales" do
+  before do
+
+    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+  end
 
   it "imports yaml containing multiple locales" do
     file = Tempfile.new 'copycat'
@@ -175,8 +172,7 @@ feature "locales" do
     YAML
     file.close
 
-    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
-    visit upload_copycat_translations_path
+    visit import_export_copycat_translations_path
     attach_file "file", file.path
     click_button "Upload"
     file.unlink
@@ -194,8 +190,7 @@ feature "locales" do
     Factory(:copycat_translation, locale: 'en', key: 'hello', value: 'world')
     Factory(:copycat_translation, locale: 'es', key: 'hello', value: 'mundo')
 
-    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
-    visit "/copycat_translations.yaml"
+    visit download_copycat_translations_path
     yaml = page.text
     assert yaml =~ /en:\s*hello: world/
     assert yaml =~ /es:\s*hello: mundo/  

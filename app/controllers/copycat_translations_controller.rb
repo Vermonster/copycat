@@ -5,18 +5,44 @@ class CopycatTranslationsController < ApplicationController
   layout 'copycat'
 
   def index
-    @current_locale = params["locale"] || I18n.locale.to_s
-    @copycat_translations = []
-    if params["show_all"]
-      @copycat_translations = CopycatTranslation.where(locale: @current_locale)
-    elsif (query = params["show_like"]) && query.present?
-      @copycat_translations = CopycatTranslation.where(locale: @current_locale).where("key LIKE ? OR value LIKE ?", "%#{query}%", "%#{query}%")
+    
+    #locale
+    # 1. not on URL at all
+    #   - set to default_locale
+    # 2. present but blank 
+    # 3. present with value
+
+
+    #search
+    # 1. not on URL at all
+    #  - show nothing
+    # 2. present but blank
+    #  - show everything
+    #    - L1 got set to default locale
+    #    - L2 show for all locales
+    #    - L3 scope to one locale
+    # 3. present with value
+    #  - show matching
+    #    - L1 got set to default locale
+    #    - L2 show for all locales
+    #    - L3 scope to one locale
+
+    
+    params[:locale] = I18n.default_locale unless params.has_key?(:locale)
+    query = CopycatTranslation
+    query = query.where(locale: params[:locale]) unless params[:locale].blank?
+
+    if params.has_key?(:search)
+      if (search = params[:search]).blank?
+        @copycat_translations = query.all
+      else
+        @copycat_translations = query.where("key LIKE ? OR value LIKE ?", "%#{search}%", "%#{search}%")
+      end
+    else
+      @copycat_translations = []
     end
-    @locales = CopycatTranslation.all.map(&:locale).uniq
-    respond_to do |format|
-      format.html
-      format.yaml { send_data CopycatTranslation.export_yaml, :filename => "copycat_translations_#{Time.now.strftime("%Y_%m_%d_%H_%M_%S")}.yml" }
-    end
+
+    @locale_names = CopycatTranslation.find(:all, select: 'distinct locale').map(&:locale)
   end
 
   def edit
@@ -37,32 +63,23 @@ class CopycatTranslationsController < ApplicationController
   def readme
   end
 
-  def upload
+  def import_export
   end
 
-  def import_yaml
+  def download
+    send_data CopycatTranslation.export_yaml, 
+      :filename => "copycat_translations_#{Time.now.strftime("%Y_%m_%d_%H_%M_%S")}.yml"
+  end
+
+  def upload
     begin
       CopycatTranslation.import_yaml(params["file"].tempfile)
     rescue StandardError => e
       flash[:notice] = "There was an error processing your upload!"
-      render :action => 'upload', :status => 400
+      render :action => 'import_export', :status => 400
     else
       redirect_to copycat_translations_path, :notice => "YAML file uploaded successfully!"
     end
-  end
-
-  def change_locale
-    redirect_to "#{copycat_translations_path}?locale=#{params["locale"]}"
-  end
-
-  def search
-    url = "#{copycat_translations_path}?locale=#{params["locale"]}"
-    if params["show_all"]
-      url += "&show_all=true" 
-    elsif params["show_like"]
-      url += "&show_like=#{params["show_like"]}"
-    end
-    redirect_to url
   end
 
 end
