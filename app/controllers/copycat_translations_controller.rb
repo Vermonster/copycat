@@ -1,4 +1,4 @@
-class CopycatTranslationsController < ApplicationController
+class CopycatTranslationsController < ActionController::Base
   
   http_basic_authenticate_with :name => COPYCAT_USERNAME, :password => COPYCAT_PASSWORD
 
