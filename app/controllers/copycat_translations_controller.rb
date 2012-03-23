@@ -28,11 +28,8 @@ class CopycatTranslationsController < ActionController::Base
   def update
     @copycat_translation = CopycatTranslation.find(params[:id])
     @copycat_translation.value = params[:copycat_translation][:value]
-    if @copycat_translation.save
-      redirect_to copycat_translations_path
-    else
-      render :action => 'edit', :status => 400
-    end
+    @copycat_translation.save!
+    redirect_to copycat_translations_path, :notice => "#{@copycat_translation.key} updated!"
   end
 
   def import_export
@@ -53,6 +50,13 @@ class CopycatTranslationsController < ActionController::Base
     else
       redirect_to copycat_translations_path, :notice => "YAML file uploaded successfully!"
     end
+  end
+
+  def destroy
+    @copycat_translation = CopycatTranslation.find(params[:id])
+    notice = "#{@copycat_translation.key} deleted!"
+    @copycat_translation.destroy
+    redirect_to copycat_translations_path, :notice => notice
   end
 
   def help

@@ -195,6 +195,47 @@ feature "copycat index" do
 
 end
 
+feature "copycat edit" do
+  before do
+    Factory(:copycat_translation, :key => "foo", :value => "bar")
+    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    visit copycat_translations_path
+  end
+
+  scenario "visit edit form" do
+    fill_in 'search', :with => 'foo'
+    click_button 'Search'
+    click_link 'foo'
+    fill_in "copycat_translation[value]", :with => 'baz'
+  end
+end
+
+feature "copycat update, delete" do
+  before do
+    Factory(:copycat_translation, :key => "foo", :value => "bar")
+    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    visit copycat_translations_path
+    fill_in 'search', :with => 'foo'
+    click_button 'Search'
+    click_link 'foo'
+  end
+
+  scenario "update" do
+    fill_in "copycat_translation[value]", :with => 'baz'
+    click_button "Update"
+    current_path.should == copycat_translations_path
+    CopycatTranslation.find_by_key("foo").value.should == 'baz'
+    page.should have_content "foo updated!"
+  end
+
+  scenario "delete" do
+    click_button "Delete this item"
+    current_path.should == copycat_translations_path
+    CopycatTranslation.find_by_key("foo").should be_nil
+    page.should have_content "foo deleted!"
+  end
+end
+
 feature "downloading and uploading yaml files" do
   before do
     page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD

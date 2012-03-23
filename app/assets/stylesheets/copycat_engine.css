@@ -393,6 +393,13 @@ div.edit {
   width: 99%;
 }
 
+div.edit h2 {
+  float: left;
+  max-width: 75%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 div.edit textarea {
   width: 99%;
   margin-top: 1em;
@@ -400,7 +407,14 @@ div.edit textarea {
 
 div.edit a {
   display: block;
-  margin: -2em 0 0 .5em;
+  margin: 0 0 0 .5em;
+}
+
+div.edit form {
+  margin-bottom: 0px;
+}
+div.edit form.button_to {
+  float: right;
 }
 
 body {
@@ -441,7 +455,9 @@ body {
 
 #notice {
   height: 2em;
-  background-color: #FFFFBB;
+  background-color: #FFD;
   text-align: center;
+  padding-top: .5em;
+  margin-bottom: .5em;
 }
 

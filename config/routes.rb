@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :copycat_translations, :only => [:index, :edit, :update] do
+  resources :copycat_translations, :only => [:index, :edit, :update, :destroy] do
     collection do
       get 'help'
       get 'import_export'

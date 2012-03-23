@@ -1,10 +1,9 @@
 <div class="edit">
-<%= form_for @copycat_translation, :url => { :action => "update" }, :html => {:class => "copycat_translation"} do |f| %>
-  <span class="copycat-edit-form-key"><%= @copycat_translation.key %></span>
-  <br>
-  <%= f.text_area :value, :size => "60x12" %>
-  <br>
-  <%= f.submit "Update" %>
-<% end %>
-<%= link_to "Cancel", copycat_translations_path %>
+  <h2><%= @copycat_translation.key%></h2>
+  <%= button_to "Delete this item", copycat_translation_path(@copycat_translation), :method => :delete, :onclick => "return confirm('Are you sure?');" %>
+  <%= form_for @copycat_translation, :url => { :action => "update" } do |f| %>
+    <%= f.text_area :value, :rows => 12 %>
+    <%= f.submit "Update" %>
+  <% end %>
+  <%= link_to "Cancel", copycat_translations_path %>
 </div>
