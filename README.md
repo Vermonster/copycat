@@ -22,7 +22,7 @@ In a view, use the Rails i18N.translate() method where you would like to display
 <h1><%= t('site.index.header') %></h1>
 ```
 
-Visit the page in your browser, and a Copycat translation will be created for the key. Then visit '/copycat_translations' in your browser, log in with the username and password generated in `config/initializers/copycat.rb`, and you can edit the value of that token.
+Visit the page in your browser, and a Copycat translation will be created for the key. Then visit `/copycat_translations` in your browser, log in with the username and password generated in `config/initializers/copycat.rb`, and you can edit the value of that token.
 
 ## Rails i18N API ##
 
