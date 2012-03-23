@@ -22,21 +22,17 @@ class CopycatTranslationsController < ActionController::Base
   end
 
   def edit
-    @copycat_translation = CopycatTranslation.find_by_id(params["id"])
+    @copycat_translation = CopycatTranslation.find(params[:id])
   end
   
   def update
-    cct = CopycatTranslation.find_by_id(params["id"])
-    cct.value = params["copycat_translation"]["value"]
-    if cct.save
+    @copycat_translation = CopycatTranslation.find(params[:id])
+    @copycat_translation.value = params[:copycat_translation][:value]
+    if @copycat_translation.save
       redirect_to copycat_translations_path
     else
-      @copycat_translation = cct
-      render :action => 'edit'
+      render :action => 'edit', :status => 400
     end
-  end
-
-  def help
   end
 
   def import_export
@@ -51,6 +47,7 @@ class CopycatTranslationsController < ActionController::Base
     begin
       CopycatTranslation.import_yaml(params["file"].tempfile)
     rescue StandardError => e
+      logger.info "\n#{e.class}\n#{e.message}"
       flash[:notice] = "There was an error processing your upload!"
       render :action => 'import_export', :status => 400
     else
@@ -58,4 +55,6 @@ class CopycatTranslationsController < ActionController::Base
     end
   end
 
+  def help
+  end
 end
