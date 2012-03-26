@@ -43,7 +43,7 @@ class CopycatTranslationsController < ActionController::Base
   def upload
     begin
       CopycatTranslation.import_yaml(params["file"].tempfile)
-    rescue StandardError => e
+    rescue Exception => e
       logger.info "\n#{e.class}\n#{e.message}"
       flash[:notice] = "There was an error processing your upload!"
       render :action => 'import_export', :status => 400
