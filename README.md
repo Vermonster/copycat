@@ -40,6 +40,10 @@ Since this process requires no code commits, non-developers can also 'deploy' co
 
 You can also commit Copycat's YAML export, which is compatible with i18n, to your git repository.
 
+## Example ##
+
+See an example application [here](https://github.com/Vermonster/copycat-demo). 
+
 ## Developing ##
 
 As a Rails engine, Copycat is developed using a nested dummy Rails app. After cloning the repository and running bundler, the plugin must be installed in the dummy app:
