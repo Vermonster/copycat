@@ -20,6 +20,7 @@ class CopycatTranslation < ActiveRecord::Base
     def export_yaml
       hash = {}
       all.each do |c|
+        next unless c.value
         hash_fatten!(hash, [c.locale].concat(c.key.split(".")), c.value)
       end
       hash.to_yaml

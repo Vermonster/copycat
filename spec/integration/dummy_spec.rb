@@ -61,3 +61,32 @@ feature "locales" do
   end
 
 end
+
+feature "yaml" do
+
+  it "round-trips both translations correctly (and doesn't export nils)" do
+    visit root_path
+    CopycatTranslation.find_by_key('site.index.intro').value.should be_nil
+    CopycatTranslation.find_by_key('site.index.header').value.should == 'The Header'
+    CopycatTranslation.count.should == 2
+
+    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    visit import_export_copycat_translations_path
+    click_link 'Download as YAML'
+    CopycatTranslation.destroy_all
+    CopycatTranslation.count.should == 0
+    yaml = page.text
+    file = Tempfile.new 'copycat'
+    file.write yaml
+    file.close
+    visit import_export_copycat_translations_path
+    attach_file "file", file.path
+    click_button "Upload"
+    file.unlink
+
+    CopycatTranslation.count.should == 1
+    CopycatTranslation.find_by_key('site.index.intro').should be_nil
+    CopycatTranslation.find_by_key('site.index.header').value.should == 'The Header'
+  end
+
+end
