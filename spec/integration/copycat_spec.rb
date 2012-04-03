@@ -100,7 +100,7 @@ feature "copycat index" do
 
     it "nil locale, blank search" do
       # impossible for user to replicate this case
-      visit "/copycat_translations?search=&commit=Search"
+      visit copycat_translations_path('search' => '', 'commit' => 'Search')
       page.should have_content 'bar1'
       page.should_not have_content 'bar2'
       page.should_not have_content 'bar3'
@@ -108,17 +108,17 @@ feature "copycat index" do
 
     it "nil locale, present search" do
       # impossible for user to replicate this case
-      visit "/copycat_translations?search=foo&commit=Search"
+      visit copycat_translations_path('search' => 'foo', 'commit' => 'Search')
       page.should have_content 'bar1'
       page.should_not have_content 'bar2'
       page.should_not have_content 'bar3'
-      visit "/copycat_translations?search=fuu&commit=Search"
+      visit copycat_translations_path('search' => 'fuu', 'commit' => 'Search')
       page.should_not have_content 'foo'
     end
 
     it "blank locale, nil search" do
       # impossible for user to replicate this case
-      visit "/copycat_translations?locale=&commit=Search"
+      visit copycat_translations_path('locale' => '', 'commit' => 'Search')
       page.should_not have_content 'foo'
     end
 
@@ -144,7 +144,7 @@ feature "copycat index" do
 
     it "present locale, nil search" do
       # impossible for user to replicate this case
-      visit "/copycat_translations?locale=en&commit=Search"
+      visit copycat_translations_path('locale' => 'en', 'commit' => 'Search')
       page.should_not have_content 'foo'
     end
 

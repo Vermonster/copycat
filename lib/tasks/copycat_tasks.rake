@@ -13,8 +13,9 @@ namespace :copycat do
     File.open(filepath, 'w') do |f|
       f << <<-CONFIG
 Copycat.setup do |config|
-  config.username = "#{username}"
-  config.password = "#{password}"
+  config.username = '#{username}'
+  config.password = '#{password}'
+  #config.route = 'copycat_translations'
 end
 CONFIG
     end
