@@ -70,7 +70,7 @@ feature "yaml" do
     CopycatTranslation.find_by_key('site.index.header').value.should == 'The Header'
     CopycatTranslation.count.should == 2
 
-    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    page.driver.browser.basic_authorize Copycat.username, Copycat.password
     visit import_export_copycat_translations_path
     click_link 'Download as YAML'
     CopycatTranslation.destroy_all

@@ -7,7 +7,7 @@ feature "copycat index" do
  
   before do
     Factory(:copycat_translation, :key => "foo", :value => "bar")
-    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    page.driver.browser.basic_authorize Copycat.username, Copycat.password
     visit copycat_translations_path
   end
 
@@ -198,7 +198,7 @@ end
 feature "copycat edit" do
   before do
     Factory(:copycat_translation, :key => "foo", :value => "bar")
-    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    page.driver.browser.basic_authorize Copycat.username, Copycat.password
     visit copycat_translations_path
   end
 
@@ -213,7 +213,7 @@ end
 feature "copycat update, delete" do
   before do
     Factory(:copycat_translation, :key => "foo", :value => "bar")
-    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    page.driver.browser.basic_authorize Copycat.username, Copycat.password
     visit copycat_translations_path
     fill_in 'search', :with => 'foo'
     click_button 'Search'
@@ -238,7 +238,7 @@ end
 
 feature "downloading and uploading yaml files" do
   before do
-    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    page.driver.browser.basic_authorize Copycat.username, Copycat.password
   end
 
   it "round-trips the YAML" do
@@ -311,7 +311,7 @@ end
 feature "locales" do
   before do
 
-    page.driver.browser.basic_authorize COPYCAT_USERNAME, COPYCAT_PASSWORD
+    page.driver.browser.basic_authorize Copycat.username, Copycat.password
   end
 
   it "imports yaml containing multiple locales" do

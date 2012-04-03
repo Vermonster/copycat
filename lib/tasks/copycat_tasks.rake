@@ -12,9 +12,11 @@ namespace :copycat do
     filepath = Rails.root.join *%w(config initializers copycat.rb)
     File.open(filepath, 'w') do |f|
       f << <<-CONFIG
-COPYCAT_USERNAME = "#{username}"
-COPYCAT_PASSWORD = "#{password}"
-        CONFIG
+Copycat.setup do |config|
+  config.username = "#{username}"
+  config.password = "#{password}"
+end
+CONFIG
     end
     puts <<-INFO
 Copycat initializer created with
