@@ -21,7 +21,7 @@ describe Copycat do
 
   before do
     Base().class_eval do
-      include CopycatImplementation
+      include Copycat::Implementation
     end
   end
 

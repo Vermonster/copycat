@@ -1,3 +1,3 @@
 class I18n::Backend::Simple
-  include CopycatImplementation
+  include Copycat::Implementation
 end
