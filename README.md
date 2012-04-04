@@ -40,6 +40,18 @@ Since this process requires no code commits, non-developers can also 'deploy' co
 
 You can also commit Copycat's YAML export, which is compatible with i18n, to your git repository.
 
+## Routes ##
+
+The default route to edit copy is '/copycat_translations'. This can be customized in the initializer.
+
+The Copycat routes are configured automatically by the engine, after your Rails application's routes.rb file is run. This means that if your routes include a catchall route at the bottom, the Copycat route will be masked. In this case you can manually draw the Copycat routes prior to the catchall route with the following line in config/routes.rb:
+
+```ruby
+Rails.application.routes.draw do
+  Copycat.routes(self)
+end
+```
+
 ## Example ##
 
 See an example application [here](https://github.com/Vermonster/copycat-demo). 
