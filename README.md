@@ -52,6 +52,13 @@ Rails.application.routes.draw do
 end
 ```
 
+## Logging ##
+Because Copycat does a SQL query for each token, it can produce a lot of noise in the log output. Therefore by default the logger is disabled for the Copycat ActiveRecord class. It can be enabled with the environment variable COPYCAT_DEBUG, e.g.
+
+```bash
+COPYCAT_DEBUG=1 rails s
+```
+
 ## Example ##
 
 See an example application [here](https://github.com/Vermonster/copycat-demo). 

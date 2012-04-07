@@ -1,5 +1,9 @@
 class CopycatTranslation < ActiveRecord::Base
 
+  unless ENV['COPYCAT_DEBUG']
+    self.logger = nil
+  end
+
   validates :key, :presence => true
   validates :locale, :presence => true
 
