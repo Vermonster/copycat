@@ -6,7 +6,7 @@ require 'spec_helper'
 feature "copycat index" do
  
   before do
-    Factory(:copycat_translation, :key => "foo", :value => "bar")
+    FactoryGirl.create(:copycat_translation, :key => "foo", :value => "bar")
     page.driver.browser.basic_authorize Copycat.username, Copycat.password
     visit copycat_translations_path
   end
@@ -51,14 +51,14 @@ feature "copycat index" do
   end
   
   it "searches in the middles of strings" do
-    Factory(:copycat_translation, :key => "site.index.something")
+    FactoryGirl.create(:copycat_translation, :key => "site.index.something")
     fill_in 'search', :with => 'index'
     click_button 'Search'
     page.should have_content 'site.index.something'
   end
 
   it "can show all" do
-    Factory(:copycat_translation, :key => "foe", :value => "beer")
+    FactoryGirl.create(:copycat_translation, :key => "foe", :value => "beer")
     click_button 'Search'
     page.should have_content 'foo'
     page.should have_content 'foe'
@@ -68,9 +68,9 @@ feature "copycat index" do
 
     before do
       CopycatTranslation.destroy_all
-      Factory(:copycat_translation, key: "foo", value: "bar1", locale: "en")
-      Factory(:copycat_translation, key: "foo", value: "bar2", locale: "fa")
-      Factory(:copycat_translation, key: "foo", value: "bar3", locale: "it")
+      FactoryGirl.create(:copycat_translation, key: "foo", value: "bar1", locale: "en")
+      FactoryGirl.create(:copycat_translation, key: "foo", value: "bar2", locale: "fa")
+      FactoryGirl.create(:copycat_translation, key: "foo", value: "bar3", locale: "it")
     end
 
     #locale
@@ -197,7 +197,7 @@ end
 
 feature "copycat edit" do
   before do
-    Factory(:copycat_translation, :key => "foo", :value => "bar")
+    FactoryGirl.create(:copycat_translation, :key => "foo", :value => "bar")
     page.driver.browser.basic_authorize Copycat.username, Copycat.password
     visit copycat_translations_path
   end
@@ -212,7 +212,7 @@ end
 
 feature "copycat update, delete" do
   before do
-    Factory(:copycat_translation, :key => "foo", :value => "bar")
+    FactoryGirl.create(:copycat_translation, :key => "foo", :value => "bar")
     page.driver.browser.basic_authorize Copycat.username, Copycat.password
     visit copycat_translations_path
     fill_in 'search', :with => 'foo'
@@ -242,11 +242,11 @@ feature "downloading and uploading yaml files" do
   end
 
   it "round-trips the YAML" do
-    Factory(:copycat_translation, :key => "a.foo1", :value => "bar1")
-    Factory(:copycat_translation, :key => "a.foo2:", :value => "bar2")
-    Factory(:copycat_translation, :key => "a.b.foo3", :value => "bar3")
-    Factory(:copycat_translation, :key => "c.foo4", :value => "bar4")
-    Factory(:copycat_translation, :key => 2, :value => "bar5")
+    FactoryGirl.create(:copycat_translation, :key => "a.foo1", :value => "bar1")
+    FactoryGirl.create(:copycat_translation, :key => "a.foo2:", :value => "bar2")
+    FactoryGirl.create(:copycat_translation, :key => "a.b.foo3", :value => "bar3")
+    FactoryGirl.create(:copycat_translation, :key => "c.foo4", :value => "bar4")
+    FactoryGirl.create(:copycat_translation, :key => 2, :value => "bar5")
     assert CopycatTranslation.count == 5
 
     visit import_export_copycat_translations_path
@@ -274,7 +274,7 @@ feature "downloading and uploading yaml files" do
 
   it "round-trips the yaml with complicated text" do
     value = "“hello world“ üokåa®fgsdf;::fs;kdf"
-    Factory(:copycat_translation, :key => "a.foo", :value => value)
+    FactoryGirl.create(:copycat_translation, :key => "a.foo", :value => value)
 
     visit import_export_copycat_translations_path
     click_link 'Download as YAML'
@@ -339,8 +339,8 @@ feature "locales" do
   end
 
   it "exports yaml containing multiple locales" do
-    Factory(:copycat_translation, locale: 'en', key: 'hello', value: 'world')
-    Factory(:copycat_translation, locale: 'es', key: 'hello', value: 'mundo')
+    FactoryGirl.create(:copycat_translation, locale: 'en', key: 'hello', value: 'world')
+    FactoryGirl.create(:copycat_translation, locale: 'es', key: 'hello', value: 'mundo')
 
     visit download_copycat_translations_path
     yaml = page.text

@@ -30,8 +30,8 @@ describe CopycatTranslation do
   end
 
   it "imports YAML" do
-    Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
-    Factory(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
+    FactoryGirl.create(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
+    FactoryGirl.create(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
 
     assert CopycatTranslation.find_by_key("sample_copy").value == "copyfoo"
     assert CopycatTranslation.find_by_key("sample_copy2").value == "copybaz"
@@ -62,13 +62,13 @@ describe CopycatTranslation do
   end
 
   it "exports YAML" do
-    Factory(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
-    Factory(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
+    FactoryGirl.create(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
+    FactoryGirl.create(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
     yaml = CopycatTranslation.export_yaml
     assert yaml =~ /sample_copy: copyfoo\n\s*sample_copy2: copybaz/
     
-    Factory(:copycat_translation, :key => "a.sample_copy3", :value => "copyfoo")
-    Factory(:copycat_translation, :key => "a.sample_copy4", :value => "copybaz")
+    FactoryGirl.create(:copycat_translation, :key => "a.sample_copy3", :value => "copyfoo")
+    FactoryGirl.create(:copycat_translation, :key => "a.sample_copy4", :value => "copybaz")
     yaml = CopycatTranslation.export_yaml
     assert yaml =~ /a:\n\s*sample_copy3: copyfoo\n\s* sample_copy4: copybaz/
   end
@@ -76,7 +76,7 @@ describe CopycatTranslation do
   it "exports and then imports complicated YAML" do
     key = "moby_dick"
     value = %|<p>Lorem ipsum</p><p class="highlight">∆'≈:</p>|
-    Factory(:copycat_translation, key: key, value: value)
+    FactoryGirl.create(:copycat_translation, key: key, value: value)
     yaml = CopycatTranslation.export_yaml
     CopycatTranslation.destroy_all
     CopycatTranslation.import_yaml(StringIO.new(yaml))

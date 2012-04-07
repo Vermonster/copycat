@@ -39,8 +39,8 @@ end
 feature "locales" do
 
   it "displays different text based on users' locale" do
-    Factory(:copycat_translation, locale: 'en', key: 'site.index.intro', value: 'world')
-    Factory(:copycat_translation, locale: 'es', key: 'site.index.intro', value: 'mundo')
+    FactoryGirl.create(:copycat_translation, locale: 'en', key: 'site.index.intro', value: 'world')
+    FactoryGirl.create(:copycat_translation, locale: 'es', key: 'site.index.intro', value: 'mundo')
 
     I18n.locale = :en
     visit root_path

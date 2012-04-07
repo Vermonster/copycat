@@ -4,7 +4,7 @@ Copycat is a Rails engine that allows users to edit live website copy.
 
 ## How to use ##
 
-Add ```copycat``` to your Gemfile and run bundle.
+Add ```copycat``` to your Gemfile and run ```bundle install```.
 
 Copycat uses a database table to store the copy items, and so it is necessary to create that:
 

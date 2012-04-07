@@ -4,8 +4,8 @@ FactoryGirl.define do
   end
   
   factory :copycat_translation do
-    key { Factory.next(:string) }
-    value { Factory.next(:string) }
+    key { FactoryGirl.generate(:string) }
+    value { FactoryGirl.generate(:string) }
     locale I18n.default_locale
   end
 end
