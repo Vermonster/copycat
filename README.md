@@ -15,7 +15,7 @@ rake db:migrate
 
 Since Copycat data is stored locally on an indexed table with no foreign keys, page loads are very fast and changes appear instantly.
 
-In a view, use the Rails i18N.translate() method where you would like to display some editable copy:
+In a view, use the Rails i18n translate method where you would like to display some editable copy:
 
 
 ```erb
@@ -24,7 +24,7 @@ In a view, use the Rails i18N.translate() method where you would like to display
 
 Visit the page in your browser, and a Copycat translation will be created for the key. Then visit `/copycat_translations` in your browser, log in with the username and password generated in `config/initializers/copycat.rb`, and you can edit the value of that token.
 
-## Rails i18N API ##
+## Rails i18n API ##
 
 You can read about the Rails internationalization framework [here](http://guides.rubyonrails.org/i18n.html).
 
@@ -53,7 +53,9 @@ end
 ```
 
 ## Logging ##
-Because Copycat does a SQL query for each token, it can produce a lot of noise in the log output. Therefore by default the logger is disabled for the Copycat ActiveRecord class. It can be enabled with the environment variable COPYCAT_DEBUG, e.g.
+Because Copycat does a SQL query for each token, it can produce a lot of noise in the log output.
+Therefore by default the logger is disabled for the Copycat ActiveRecord class.
+It can be enabled with the environment variable COPYCAT_DEBUG, e.g.
 
 ```bash
 COPYCAT_DEBUG=1 rails s
