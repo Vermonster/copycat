@@ -13,7 +13,7 @@ class CopycatTranslationsController < ActionController::Base
       if (search = params[:search]).blank?
         @copycat_translations = query.all
       else
-        @copycat_translations = query.where("key LIKE ? OR value LIKE ?", "%#{search}%", "%#{search}%")
+        @copycat_translations = query.where("'key' LIKE ? OR 'value' LIKE ?", "%#{search}%", "%#{search}%")
       end
     else
       @copycat_translations = []
