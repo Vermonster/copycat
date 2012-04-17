@@ -10,10 +10,12 @@ class CopycatTranslationsController < ActionController::Base
     query = query.where(locale: params[:locale]) unless params[:locale].blank?
 
     if params.has_key?(:search)
-      if (search = params[:search]).blank?
+      if params[:search].blank?
         @copycat_translations = query.all
       else
-        @copycat_translations = query.where("key LIKE ? OR value LIKE ?", "%#{search}%", "%#{search}%")
+        key_like = CopycatTranslation.where_like(:key, params[:search])
+        value_like = CopycatTranslation.where_like(:value, params[:search])
+        @copycat_translations = query.where("#{key_like} OR #{value_like}")
       end
     else
       @copycat_translations = []
