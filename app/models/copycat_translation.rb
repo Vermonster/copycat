@@ -7,10 +7,6 @@ class CopycatTranslation < ActiveRecord::Base
   validates :key, :presence => true
   validates :locale, :presence => true
 
-  def self.where_like(col, pattern)
-    where(arel_table[col].matches("%#{pattern}%")).where_clauses.first
-  end
-
   module Serialize
    
     def import_yaml(yaml)
