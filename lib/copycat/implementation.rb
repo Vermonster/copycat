@@ -6,7 +6,7 @@ module Copycat
       cct = CopycatTranslation.where(locale: locale.to_s, key: key.to_s).first
       return cct.value if cct
       value = super(locale, key, scope, options)
-      if value.is_a?(String) || value.nil?
+      if value.is_a?(String) || value.nil? && Copycat.create_nils
         CopycatTranslation.create(locale: locale.to_s, key: key.to_s, value: value)
       end
       value

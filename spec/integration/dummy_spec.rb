@@ -21,10 +21,18 @@ feature "use #t" do
     CopycatTranslation.find_by_key('site.index.header').should_not be_nil
   end
 
-  it "creates a copycat_translation if the yaml does not have an entry" do
+  it "by default creates an empty copycat_translation if the yaml does not have an entry" do
+    Copycat.create_nils = true
     CopycatTranslation.find_by_key('site.index.intro').should be_nil
     visit root_path
     CopycatTranslation.find_by_key('site.index.intro').should_not be_nil
+  end
+
+  it "does not create an empty copycat_translation when create_nils is set to false" do
+    Copycat.create_nils = false
+    CopycatTranslation.find_by_key('site.index.intro').should be_nil
+    visit root_path
+    CopycatTranslation.find_by_key('site.index.intro').should be_nil
   end
 
   it "shows the copycat_translation instead of the yaml" do
