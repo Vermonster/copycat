@@ -15,6 +15,7 @@ namespace :copycat do
 Copycat.setup do |config|
   config.username = '#{username}'
   config.password = '#{password}'
+  #config.create_nils = true
   #config.route = 'copycat_translations'
 end
 CONFIG

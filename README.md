@@ -52,6 +52,15 @@ Rails.application.routes.draw do
 end
 ```
 
+## Caching empty values ##
+By default, copycat will cache empty values in the database. If a lookup results to a missing translation a new copycat entry will be created with an empty value for this locale and key.
+This may not be desirable, especially during development, as after the first lookup copycat will always serve the empty translation, preventing the YML files from being consulted again for this locale and key.
+Changing the default behaviour can be achieved through the following setting on the initializer:
+
+```ruby
+config.create_nils = false
+```
+
 ## Logging ##
 Because Copycat does a SQL query for each token, it can produce a lot of noise in the log output.
 Therefore by default the logger is disabled for the Copycat ActiveRecord class.
