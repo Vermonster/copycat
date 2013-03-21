@@ -400,6 +400,19 @@ div.edit h2 {
   text-overflow: ellipsis;
 }
 
+div.edit .variables table {
+width: auto;
+}
+
+
+div.edit .variables table th {
+  font-weight: bold;
+}
+div.edit .variables table td,
+div.edit .variables table th {
+padding: 1em;
+border: 1px dotted;
+}
 div.edit textarea {
   width: 99%;
   margin-top: 1em;
@@ -461,3 +474,6 @@ body {
   margin-bottom: .5em;
 }
 
+.variables {
+  clear: both;
+}

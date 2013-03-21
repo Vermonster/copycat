@@ -4,6 +4,7 @@ class CreateCopycatTranslations < ActiveRecord::Migration
       t.string :locale
       t.string :key
       t.text :value
+      t.text :options
       t.timestamps
     end
     change_table :copycat_translations do |t|
