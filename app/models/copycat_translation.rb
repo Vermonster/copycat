@@ -11,7 +11,9 @@ class CopycatTranslation < ActiveRecord::Base
   serialize :options, Hash
 
   def user_parameters
-    self.options.dup.delete_if {|k| k == :rescue_format }
+    # RESERVED_KEYS from i18n gem
+    RESERVED_KEYS = [:scope, :default, :separator, :resolve, :rescue_format]
+    self.options.dup.delete_if {|k| RESERVED_KEYS.include? k}
   end
 
   module Serialize
