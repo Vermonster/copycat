@@ -9,10 +9,10 @@ class CopycatTranslation < ActiveRecord::Base
 
   attr_accessible :locale, :key, :value, :options
   serialize :options, Hash
+  RESERVED_KEYS = [:scope, :default, :separator, :resolve, :rescue_format]
 
   def user_parameters
     # RESERVED_KEYS from i18n gem
-    RESERVED_KEYS = [:scope, :default, :separator, :resolve, :rescue_format]
     self.options.dup.delete_if {|k| RESERVED_KEYS.include? k}
   end
 
@@ -23,7 +23,7 @@ class CopycatTranslation < ActiveRecord::Base
       hash.each do |locale, data|
         hash_flatten(data).each do |key, value|
           c = where(key: key, locale: locale).first
-          c ||= new(key: key, locale: locale) 
+          c ||= new(key: key, locale: locale)
           c.value = value
           c.save
         end
