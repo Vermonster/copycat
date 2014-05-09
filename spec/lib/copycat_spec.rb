@@ -27,16 +27,16 @@ describe Copycat do
 
   describe ".lookup" do
     it "returns simple lookup if copycat_translation missing" do
-      base.lookup(nil, '').should == "translation missing"
+      expect(base.lookup(nil, '')).to eq("translation missing")
     end
     it "returns copycat_translation if present" do
       cct = FactoryGirl.create(:copycat_translation)
-      base.lookup(cct.locale, cct.key).should == cct.value
+      expect(base.lookup(cct.locale, cct.key)).to eq(cct.value)
     end
     it "creates copycat_translation if one is missing" do
-      CopycatTranslation.where(locale: 'en', key: 'foo').should be_empty
+      expect(CopycatTranslation.where(locale: 'en', key: 'foo')).to be_empty
       base.lookup('en', 'foo')
-      CopycatTranslation.where(locale: 'en', key: 'foo').should_not be_empty
+      expect(CopycatTranslation.where(locale: 'en', key: 'foo')).not_to be_empty
     end
   end
 

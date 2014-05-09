@@ -51,13 +51,13 @@ describe CopycatTranslation do
 
   describe "export YAML" do
     it "can be consumed by i18N" do
-      I18n.t('site.title').should_not == 'My Blog'
+      expect(I18n.t('site.title')).not_to eq('My Blog')
       CopycatTranslation.destroy_all
       CopycatTranslation.create(key: 'site.title', value: 'My Blog', locale: 'en')
       data = YAML.load(CopycatTranslation.export_yaml)
       CopycatTranslation.destroy_all
       data.each { |locale, d| I18n.backend.store_translations(locale, d || {}) } #i18n/backend/base.rb:159
-      I18n.t('site.title').should == 'My Blog'
+      expect(I18n.t('site.title')).to eq('My Blog')
     end
   end
 
@@ -80,7 +80,7 @@ describe CopycatTranslation do
     yaml = CopycatTranslation.export_yaml
     CopycatTranslation.destroy_all
     CopycatTranslation.import_yaml(StringIO.new(yaml))
-    CopycatTranslation.find_by_key(key).value.should == value
+    expect(CopycatTranslation.find_by_key(key).value).to eq(value)
   end
 
 end

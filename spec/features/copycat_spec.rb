@@ -18,50 +18,50 @@ feature "copycat index" do
   end
 
   it "doesn't show any tokens by default" do
-    page.should_not have_content 'foo'
-    page.should_not have_content 'bar'
+    expect(page).not_to have_content 'foo'
+    expect(page).not_to have_content 'bar'
   end
 
   it "allows search by key" do
     fill_in 'search', :with => 'foo'
     click_button 'Search'
-    page.should have_content 'foo'
-    page.should have_content 'bar'
+    expect(page).to have_content 'foo'
+    expect(page).to have_content 'bar'
   end
 
   it "allows search by key" do
     fill_in 'search', :with => 'xfoo'
     click_button 'Search'
-    page.should_not have_content 'foo'
-    page.should_not have_content 'bar'
+    expect(page).not_to have_content 'foo'
+    expect(page).not_to have_content 'bar'
   end
 
   it "allows search by value" do
     fill_in 'search', :with => 'bar'
     click_button 'Search'
-    page.should have_content 'foo'
-    page.should have_content 'bar'
+    expect(page).to have_content 'foo'
+    expect(page).to have_content 'bar'
   end
 
   it "allows search by value" do
     fill_in 'search', :with => 'xbar'
     click_button 'Search'
-    page.should_not have_content 'foo'
-    page.should_not have_content 'bar'
+    expect(page).not_to have_content 'foo'
+    expect(page).not_to have_content 'bar'
   end
 
   it "searches in the middles of strings" do
     FactoryGirl.create(:copycat_translation, :key => "site.index.something")
     fill_in 'search', :with => 'index'
     click_button 'Search'
-    page.should have_content 'site.index.something'
+    expect(page).to have_content 'site.index.something'
   end
 
   it "can show all" do
     FactoryGirl.create(:copycat_translation, :key => "foe", :value => "beer")
     click_button 'Search'
-    page.should have_content 'foo'
-    page.should have_content 'foe'
+    expect(page).to have_content 'foo'
+    expect(page).to have_content 'foe'
   end
 
   context "more than one locale" do
@@ -95,100 +95,100 @@ feature "copycat index" do
 
     it "nil locale, nil search" do
       visit copycat_translations_path
-      page.should_not have_content 'foo'
+      expect(page).not_to have_content 'foo'
     end
 
     it "nil locale, blank search" do
       # impossible for user to replicate this case
       visit copycat_translations_path('search' => '', 'commit' => 'Search')
-      page.should have_content 'bar1'
-      page.should_not have_content 'bar2'
-      page.should_not have_content 'bar3'
+      expect(page).to have_content 'bar1'
+      expect(page).not_to have_content 'bar2'
+      expect(page).not_to have_content 'bar3'
     end
 
     it "nil locale, present search" do
       # impossible for user to replicate this case
       visit copycat_translations_path('search' => 'foo', 'commit' => 'Search')
-      page.should have_content 'bar1'
-      page.should_not have_content 'bar2'
-      page.should_not have_content 'bar3'
+      expect(page).to have_content 'bar1'
+      expect(page).not_to have_content 'bar2'
+      expect(page).not_to have_content 'bar3'
       visit copycat_translations_path('search' => 'fuu', 'commit' => 'Search')
-      page.should_not have_content 'foo'
+      expect(page).not_to have_content 'foo'
     end
 
     it "blank locale, nil search" do
       # impossible for user to replicate this case
       visit copycat_translations_path('locale' => '', 'commit' => 'Search')
-      page.should_not have_content 'foo'
+      expect(page).not_to have_content 'foo'
     end
 
     it "blank locale, blank search" do
       select '', :from => 'locale'
       click_button 'Search'
-      page.should have_content 'bar1'
-      page.should have_content 'bar2'
-      page.should have_content 'bar3'
+      expect(page).to have_content 'bar1'
+      expect(page).to have_content 'bar2'
+      expect(page).to have_content 'bar3'
     end
 
     it "blank locale, present search" do
       select '', :from => 'locale'
       fill_in 'search', :with => 'foo'
       click_button 'Search'
-      page.should have_content 'bar1'
-      page.should have_content 'bar2'
-      page.should have_content 'bar3'
+      expect(page).to have_content 'bar1'
+      expect(page).to have_content 'bar2'
+      expect(page).to have_content 'bar3'
       fill_in 'search', :with => 'fuu'
       click_button 'Search'
-      page.should_not have_content 'foo'
+      expect(page).not_to have_content 'foo'
     end
 
     it "present locale, nil search" do
       # impossible for user to replicate this case
       visit copycat_translations_path('locale' => 'en', 'commit' => 'Search')
-      page.should_not have_content 'foo'
+      expect(page).not_to have_content 'foo'
     end
 
     it "present locale, blank search" do
       select 'en', :from => 'locale'
       click_button 'Search'
-      page.should have_content 'bar1'
-      page.should_not have_content 'bar2'
-      page.should_not have_content 'bar3'
+      expect(page).to have_content 'bar1'
+      expect(page).not_to have_content 'bar2'
+      expect(page).not_to have_content 'bar3'
       select 'fa', :from => 'locale'
       click_button 'Search'
-      page.should_not have_content 'bar1'
-      page.should have_content 'bar2'
-      page.should_not have_content 'bar3'
+      expect(page).not_to have_content 'bar1'
+      expect(page).to have_content 'bar2'
+      expect(page).not_to have_content 'bar3'
       select 'it', :from => 'locale'
       click_button 'Search'
-      page.should_not have_content 'bar1'
-      page.should_not have_content 'bar2'
-      page.should have_content 'bar3'
+      expect(page).not_to have_content 'bar1'
+      expect(page).not_to have_content 'bar2'
+      expect(page).to have_content 'bar3'
     end
 
     it "present locale, present search" do
       select 'en', :from => 'locale'
       fill_in 'search', :with => 'foo'
       click_button 'Search'
-      page.should have_content 'bar1'
-      page.should_not have_content 'bar2'
-      page.should_not have_content 'bar3'
+      expect(page).to have_content 'bar1'
+      expect(page).not_to have_content 'bar2'
+      expect(page).not_to have_content 'bar3'
       select 'fa', :from => 'locale'
       fill_in 'search', :with => 'foo'
       click_button 'Search'
-      page.should_not have_content 'bar1'
-      page.should have_content 'bar2'
-      page.should_not have_content 'bar3'
+      expect(page).not_to have_content 'bar1'
+      expect(page).to have_content 'bar2'
+      expect(page).not_to have_content 'bar3'
       select 'it', :from => 'locale'
       fill_in 'search', :with => 'foo'
       click_button 'Search'
-      page.should_not have_content 'bar1'
-      page.should_not have_content 'bar2'
-      page.should have_content 'bar3'
+      expect(page).not_to have_content 'bar1'
+      expect(page).not_to have_content 'bar2'
+      expect(page).to have_content 'bar3'
       select 'en', :from => 'locale'
       fill_in 'search', :with => 'fuu'
       click_button 'Search'
-      page.should_not have_content 'foo'
+      expect(page).not_to have_content 'foo'
     end
 
   end
@@ -223,16 +223,16 @@ feature "copycat update, delete" do
   scenario "update" do
     fill_in "copycat_translation[value]", :with => 'baz'
     click_button "Update"
-    current_path.should == copycat_translations_path
-    CopycatTranslation.find_by_key("foo").value.should == 'baz'
-    page.should have_content "foo updated!"
+    expect(current_path).to eq(copycat_translations_path)
+    expect(CopycatTranslation.find_by_key("foo").value).to eq('baz')
+    expect(page).to have_content "foo updated!"
   end
 
   scenario "delete" do
     click_button "Delete this item"
-    current_path.should == copycat_translations_path
-    CopycatTranslation.find_by_key("foo").should be_nil
-    page.should have_content "foo deleted!"
+    expect(current_path).to eq(copycat_translations_path)
+    expect(CopycatTranslation.find_by_key("foo")).to be_nil
+    expect(page).to have_content "foo deleted!"
   end
 end
 
@@ -301,8 +301,8 @@ feature "downloading and uploading yaml files" do
     attach_file "file", file.path
     click_button "Upload"
     file.unlink
-    page.status_code.should == 400
-    page.should have_content("There was an error processing your upload!")
+    expect(page.status_code).to eq(400)
+    expect(page).to have_content("There was an error processing your upload!")
     assert CopycatTranslation.count == 0
   end
 
