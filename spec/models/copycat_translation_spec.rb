@@ -12,7 +12,7 @@ describe CopycatTranslation do
       expect { b.save }.should_not raise_error
     end
   end
-  
+
   describe "helper methods" do
     it "flattens hashes" do
       before = {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i", "j" => "k"}, "l" => "m"}}
@@ -40,7 +40,7 @@ describe CopycatTranslation do
     yaml = <<-YAML
       en:
         hello: "Hello world"
-        sample_copy: "lorem ipsum"   
+        sample_copy: "lorem ipsum"
     YAML
     CopycatTranslation.import_yaml(StringIO.new(yaml))
 
@@ -66,7 +66,7 @@ describe CopycatTranslation do
     FactoryGirl.create(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
     yaml = CopycatTranslation.export_yaml
     assert yaml =~ /sample_copy: copyfoo\n\s*sample_copy2: copybaz/
-    
+
     FactoryGirl.create(:copycat_translation, :key => "a.sample_copy3", :value => "copyfoo")
     FactoryGirl.create(:copycat_translation, :key => "a.sample_copy4", :value => "copybaz")
     yaml = CopycatTranslation.export_yaml
