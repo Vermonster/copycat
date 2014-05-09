@@ -75,7 +75,7 @@ feature "yaml" do
     click_link 'Download as YAML'
     CopycatTranslation.destroy_all
     CopycatTranslation.count.should == 0
-    yaml = page.text
+    yaml = page.body
     file = Tempfile.new 'copycat'
     file.write yaml
     file.close

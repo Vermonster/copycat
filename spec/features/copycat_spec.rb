@@ -254,7 +254,7 @@ feature "downloading and uploading yaml files" do
     CopycatTranslation.destroy_all
     assert CopycatTranslation.count == 0
 
-    yaml = page.text
+    yaml = page.body
     file = Tempfile.new 'copycat'
     file.write yaml
     file.close
@@ -280,7 +280,7 @@ feature "downloading and uploading yaml files" do
     click_link 'Download as YAML'
     CopycatTranslation.destroy_all
 
-    yaml = page.text
+    yaml = page.body
     file = Tempfile.new 'copycat'
     file.write yaml
     file.close
