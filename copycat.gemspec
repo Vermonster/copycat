@@ -21,4 +21,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'factory_girl_rails', '~> 4.4'
   s.add_development_dependency 'capybara', '~> 2.2'
   s.add_development_dependency 'pry', '~> 0.9'
+  s.add_development_dependency 'appraisal', '~> 0.5'
 end
