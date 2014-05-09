@@ -7,9 +7,9 @@ describe CopycatTranslation do
     it "validates uniqueness of key & locale" do
       CopycatTranslation.new(key: "foo", locale: "en", value: "bar").save
       a = CopycatTranslation.new(key: "foo", locale: "en", value: "bar2")
-      expect { a.save }.should raise_error
+      expect { a.save }.to raise_error
       b = CopycatTranslation.new(key: "foo", locale: "fa", value: "bar")
-      expect { b.save }.should_not raise_error
+      expect { b.save }.not_to raise_error
     end
   end
 
