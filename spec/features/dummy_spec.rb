@@ -12,7 +12,7 @@ feature "use #t" do
   it "uses i18n.t" do
     visit root_path
     page.should have_content 'The Header'
-    page.should have_content 'Intro' #ActionView::Helpers::TranslationHelper#translate wrapper 
+    page.should have_content 'Intro' #ActionView::Helpers::TranslationHelper#translate wrapper
   end
 
   it "creates a copycat_translation if the yaml has an entry" do
@@ -46,12 +46,12 @@ feature "locales" do
     visit root_path
     page.should have_content 'world'
     page.should_not have_content 'mundo'
-    
+
     I18n.locale = :es
     visit root_path
     page.should have_content 'mundo'
     page.should_not have_content 'world'
-    
+
     I18n.locale = :fa
     visit root_path
     page.should_not have_content 'world'
@@ -75,7 +75,7 @@ feature "yaml" do
     click_link 'Download as YAML'
     CopycatTranslation.destroy_all
     CopycatTranslation.count.should == 0
-    yaml = page.text
+    yaml = page.body
     file = Tempfile.new 'copycat'
     file.write yaml
     file.close

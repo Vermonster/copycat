@@ -12,6 +12,9 @@ rescue LoadError
   RDoc::Task = Rake::RDocTask
 end
 
+require 'rspec/core/rake_task'
+require 'appraisal'
+
 RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = 'Copycat'
@@ -24,5 +27,8 @@ APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
 load 'rails/tasks/engine.rake'
 
 Bundler::GemHelper.install_tasks
+
+desc 'Run specs'
+RSpec::Core::RakeTask.new
 
 task :default => :spec
