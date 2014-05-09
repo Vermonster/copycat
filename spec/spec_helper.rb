@@ -4,6 +4,7 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'tempfile'
 require 'factory_girl_rails'
+require 'pry'
 
 RSpec.configure do |config|
   config.mock_with :rspec
