@@ -7,7 +7,7 @@ module Copycat
       return cct.value if cct
       value = super(locale, key, scope, options)
       if value.is_a?(String) || value.nil?
-        CopycatTranslation.create(locale: locale.to_s, key: key.to_s, value: value)
+        CopycatTranslation.create(locale: locale.to_s, key: key.to_s, value: value, options: options)
       end
       value
     end

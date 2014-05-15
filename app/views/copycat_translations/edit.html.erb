@@ -1,6 +1,30 @@
 <div class="edit">
-  <h2><%= @copycat_translation.key%></h2>
+  <h2><%= @copycat_translation.key %></h2>
   <%= button_to "Delete this item", copycat_translation_path(@copycat_translation), :method => :delete, :onclick => "return confirm('Are you sure?');" %>
+  <%- if @copycat_translation.user_parameters.present? %>
+    <div class="variables">
+      <h4>Variables</h4>
+      <p> You could use the following variables in your inserted text, just using %{variable} and you will obtain its value</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Value</th>
+            <th>Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%- @copycat_translation.user_parameters.each do |key, value| %>
+            <tr>
+              <td><%= key %></td>
+              <td><%= value %></td>
+              <td><%= "%{#{key}}" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
   <%= form_for @copycat_translation, :url => { :action => "update" } do |f| %>
     <%= f.text_area :value, :rows => 12 %>
     <%= f.submit "Update" %>
