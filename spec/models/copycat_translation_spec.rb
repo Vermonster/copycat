@@ -6,14 +6,16 @@ describe CopycatTranslation do
   it { should validate_presence_of(:locale) }
   it { should validate_presence_of(:key) }
 
-  describe "database constraints" do
-    it "validates uniqueness of key & locale" do
-      CopycatTranslation.new(key: "foo", locale: "en", value: "bar").save
-      a = CopycatTranslation.new(key: "foo", locale: "en", value: "bar2")
-      expect { a.save }.to raise_error
-      b = CopycatTranslation.new(key: "foo", locale: "fa", value: "bar")
-      expect { b.save }.not_to raise_error
-    end
+  it "validates uniqueness of key & locale" do
+    create(:copycat_translation, key: "foo", locale: "en", value: "bar")
+
+    expect do
+      create(:copycat_translation, key: "foo", locale: "en", value: "bar")
+    end.to raise_error ActiveRecord::RecordNotUnique
+
+    expect do
+      create(:copycat_translation, key: "foo", locale: "es", value: "bar")
+    end.not_to raise_error
   end
 
   it "imports YAML" do
