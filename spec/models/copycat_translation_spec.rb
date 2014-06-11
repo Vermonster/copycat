@@ -3,6 +3,9 @@ require 'spec_helper'
 
 describe CopycatTranslation do
 
+  it { should validate_presence_of(:locale) }
+  it { should validate_presence_of(:key) }
+
   describe "database constraints" do
     it "validates uniqueness of key & locale" do
       CopycatTranslation.new(key: "foo", locale: "en", value: "bar").save
