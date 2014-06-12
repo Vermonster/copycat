@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara', '~> 2.2'
   s.add_development_dependency 'pry', '~> 0.9'
   s.add_development_dependency 'appraisal', '~> 0.5'
+  s.add_development_dependency 'shoulda-matchers', '~> 2.6'
 end

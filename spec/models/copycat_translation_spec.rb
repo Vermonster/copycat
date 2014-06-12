@@ -3,75 +3,69 @@ require 'spec_helper'
 
 describe CopycatTranslation do
 
-  describe "database constraints" do
-    it "validates uniqueness of key & locale" do
-      CopycatTranslation.new(key: "foo", locale: "en", value: "bar").save
-      a = CopycatTranslation.new(key: "foo", locale: "en", value: "bar2")
-      expect { a.save }.to raise_error
-      b = CopycatTranslation.new(key: "foo", locale: "fa", value: "bar")
-      expect { b.save }.not_to raise_error
-    end
+  it { should validate_presence_of(:locale) }
+  it { should validate_presence_of(:key) }
+
+  it "validates uniqueness of key & locale" do
+    create(:copycat_translation, :key => "foo", :locale => "en", :value => "bar")
+
+    expect do
+      create(:copycat_translation, :key => "foo", :locale => "en", :value => "bar")
+    end.to raise_error ActiveRecord::RecordNotUnique
+
+    expect do
+      create(:copycat_translation, :key => "foo", :locale => "es", :value => "bar")
+    end.not_to raise_error
   end
 
-  it "imports YAML" do
-    FactoryGirl.create(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
-    FactoryGirl.create(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
+  it 'imports YAML string, updating existing keys, ignoring keys with blank values' do
+    create(:copycat_translation, :key => 'foo', :value => 'bar')
+    create(:copycat_translation, :key => 'controller.view.copy', :value => 'derp')
+    create(:copycat_translation, :key => 'controller.view.partial.copy', :value => 'foo')
 
-    assert CopycatTranslation.find_by_key("sample_copy").value == "copyfoo"
-    assert CopycatTranslation.find_by_key("sample_copy2").value == "copybaz"
-    assert CopycatTranslation.find_by_key("hello").nil?
-
-    yaml = <<-YAML
+    yaml = <<-YAML.strip_heredoc
       en:
         hello: "Hello world"
-        sample_copy: "lorem ipsum"
+        foo: "lorem ipsum"
         controller:
           view:
             partial:
-              copy: 'derp'
+              copy: 'bar'
               blank:
     YAML
-    CopycatTranslation.import_yaml(StringIO.new(yaml))
 
-    assert CopycatTranslation.find_by_key("sample_copy").value == "lorem ipsum"
-    assert CopycatTranslation.find_by_key("sample_copy2").value == "copybaz"
-    assert CopycatTranslation.find_by_key("hello").value == "Hello world"
-    assert CopycatTranslation.find_by_key("controller.view.partial.copy").value == "derp"
-    assert CopycatTranslation.find_by_key("controller.view.partial.blank") == nil
+    CopycatTranslation.import_yaml(yaml)
+
+    expect(I18n.t('foo')).to eq 'lorem ipsum'
+    expect(I18n.t('hello')).to eq 'Hello world'
+    expect(I18n.t('controller.view.copy')).to eq 'derp'
+    expect(I18n.t('controller.view.partial.copy')).to eq 'bar'
+    expect(I18n.t('controller.view.blank')).to eq 'translation missing: en.controller.view.blank'
   end
 
-  describe "export YAML" do
-    it "can be consumed by i18N" do
-      expect(I18n.t('site.title')).not_to eq('My Blog')
-      CopycatTranslation.destroy_all
-      CopycatTranslation.create(key: 'site.title', value: 'My Blog', locale: 'en')
-      data = YAML.load(CopycatTranslation.export_yaml)
-      CopycatTranslation.destroy_all
-      data.each { |locale, d| I18n.backend.store_translations(locale, d || {}) } #i18n/backend/base.rb:159
-      expect(I18n.t('site.title')).to eq('My Blog')
-    end
-  end
+  it 'exports YAML that can be consumed by I18n' do
+    # Assert that the translation doesn't already exist to avoid false postives
+    expect(I18n.t('apple')).not_to eq('Apple')
+    expect(I18n.t('apple', :locale => :es)).not_to eq('Manzana')
+    expect(I18n.t('site.title')).not_to eq('My Blog')
 
-  it "exports YAML" do
-    FactoryGirl.create(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
-    FactoryGirl.create(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
+    # The previous calls to I18n populate the database
+    CopycatTranslation.delete_all
+    create(:copycat_translation, :locale => 'en', :key => 'site.title', :value => 'My Blog')
+    create(:copycat_translation, :locale => 'en', :key => 'site.blogs.index.markup', :value =>%|<p>Lorem ipsum</p><p class="highlight">∆'≈:</p>|)
+    create(:copycat_translation, :locale => 'en', :key => 'apple', :value => 'Apple')
+    create(:copycat_translation, :locale => 'es', :key => 'apple', :value => 'Manzana')
+
     yaml = CopycatTranslation.export_yaml
-    assert yaml =~ /sample_copy: copyfoo\n\s*sample_copy2: copybaz/
 
-    FactoryGirl.create(:copycat_translation, :key => "a.sample_copy3", :value => "copyfoo")
-    FactoryGirl.create(:copycat_translation, :key => "a.sample_copy4", :value => "copybaz")
-    yaml = CopycatTranslation.export_yaml
-    assert yaml =~ /a:\n\s*sample_copy3: copyfoo\n\s* sample_copy4: copybaz/
+    filepath = Pathname.new(File.expand_path(File.join(__FILE__, '..', '..', 'support', 'export.yml')))
+    File.open(filepath, 'w') { |f| f.write yaml }
+
+    I18n.backend.load_translations(filepath)
+
+    expect(I18n.t('apple')).to eq 'Apple'
+    expect(I18n.t('apple', :locale => :es)).to eq 'Manzana'
+    expect(I18n.t('site.title')).to eq 'My Blog'
+    expect(I18n.t('site.blogs.index.markup')).to eq %|<p>Lorem ipsum</p><p class="highlight">∆'≈:</p>|
   end
-
-  it "exports and then imports complicated YAML" do
-    key = "moby_dick"
-    value = %|<p>Lorem ipsum</p><p class="highlight">∆'≈:</p>|
-    FactoryGirl.create(:copycat_translation, key: key, value: value)
-    yaml = CopycatTranslation.export_yaml
-    CopycatTranslation.destroy_all
-    CopycatTranslation.import_yaml(StringIO.new(yaml))
-    expect(CopycatTranslation.find_by_key(key).value).to eq(value)
-  end
-
 end
