@@ -6,59 +6,53 @@ class CopycatTranslation < ActiveRecord::Base
 
   validates :key, :presence => true
   validates :locale, :presence => true
-  
+
   attr_accessible :locale, :key, :value
 
-  module Serialize
-   
-    def import_yaml(yaml)
-      hash = YAML.load(yaml)
-      hash.each do |locale, data|
-        hash_flatten(data).each do |key, value|
-          c = where(key: key, locale: locale).first
-          c ||= new(key: key, locale: locale) 
-          c.value = value
-          c.save
+  def self.import_yaml(yaml)
+    locales = YAML.load(yaml)
+
+    locales.each do |locale, translations|
+      while !translations.empty?
+        flattened_translations = {}
+
+        translations.each_key do |key_component|
+
+          translation_or_nesting = translations.delete(key_component)
+
+          if translation_or_nesting.is_a?(Hash)
+            translation_or_nesting.each do |key, value|
+              flattened_translations["#{key_component}.#{key}"] = value
+            end
+          elsif translation_or_nesting.present?
+            attributes = { key: key_component, locale: locale }
+
+            record = where(attributes).first_or_initialize(attributes)
+            record.value = translation_or_nesting
+
+            record.save
+          end
         end
-      end
-    end
 
-    def export_yaml
-      hash = {}
-      all.each do |c|
-        next unless c.value
-        hash_fatten!(hash, [c.locale].concat(c.key.split(".")), c.value)
-      end
-      hash.to_yaml
-    end
-    
-    # {"foo"=>{"a"=>"1", "b"=>"2"}} ----> {"foo.a"=>1, "foo.b"=>2}
-    def hash_flatten(hash)
-      result = {} 
-      hash.each do |key, value|
-        if value.is_a? Hash 
-          hash_flatten(value).each { |k,v| result["#{key}.#{k}"] = v }
-        else 
-          result[key] = value
-        end
-      end
-      result
-    end
-
-    # ({"a"=>{"b"=>{"e"=>"f"}}}, ["a","b","c"], "d") ----> {"a"=>{"b"=>{"c"=>"d", "e"=>"f"}}}
-    def hash_fatten!(hash, keys, value)
-      if keys.length == 1
-        hash[keys.first] = value
-      else
-        head = keys.first
-        rest = keys[1..-1]
-        hash[head] ||= {}
-        hash_fatten!(hash[head], rest, value)
+        translations.merge!(flattened_translations)
       end
     end
-
   end
 
-  extend Serialize
+  def self.export_yaml
+    translations = all.inject(Hash.new { |h, k| h[k] = {} }) do |export, translation|
+      key_components = translation.key.split('.')
+      key_tail = key_components.pop
 
+      key_scope = key_components.inject(export[translation.locale]) do |scope, key|
+        scope[key] ||= {}
+      end
+
+      key_scope[key_tail] = translation.value
+
+      export
+    end
+
+    translations.to_yaml
+  end
 end

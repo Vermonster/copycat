@@ -13,22 +13,6 @@ describe CopycatTranslation do
     end
   end
 
-  describe "helper methods" do
-    it "flattens hashes" do
-      before = {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i", "j" => "k"}, "l" => "m"}}
-      after = CopycatTranslation.hash_flatten(before)
-      assert after == {"a.b" => "c", "a.d" => "e", "f.g.h" => "i", "f.g.j" => "k", "f.l" => "m"}
-    end
-
-    it "fattens hashes" do
-      hash = {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i"}, "l" => "m"}}
-      keys = "f.g.j".split(".")
-      value = "k"
-      CopycatTranslation.hash_fatten!(hash, keys, value)
-      assert hash == {"a" => {"b" => "c", "d" => "e"}, "f" => {"g" => {"h" => "i", "j" => "k"}, "l" => "m"}}
-    end
-  end
-
   it "imports YAML" do
     FactoryGirl.create(:copycat_translation, :key => "sample_copy", :value => "copyfoo")
     FactoryGirl.create(:copycat_translation, :key => "sample_copy2", :value => "copybaz")
@@ -41,12 +25,19 @@ describe CopycatTranslation do
       en:
         hello: "Hello world"
         sample_copy: "lorem ipsum"
+        controller:
+          view:
+            partial:
+              copy: 'derp'
+              blank:
     YAML
     CopycatTranslation.import_yaml(StringIO.new(yaml))
 
     assert CopycatTranslation.find_by_key("sample_copy").value == "lorem ipsum"
     assert CopycatTranslation.find_by_key("sample_copy2").value == "copybaz"
     assert CopycatTranslation.find_by_key("hello").value == "Hello world"
+    assert CopycatTranslation.find_by_key("controller.view.partial.copy").value == "derp"
+    assert CopycatTranslation.find_by_key("controller.view.partial.blank") == nil
   end
 
   describe "export YAML" do
@@ -84,7 +75,3 @@ describe CopycatTranslation do
   end
 
 end
-
-
-
-
