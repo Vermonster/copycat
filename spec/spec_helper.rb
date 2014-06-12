@@ -10,4 +10,6 @@ require 'pry'
 RSpec.configure do |config|
   config.mock_with :rspec
   config.use_transactional_fixtures = true
+
+  config.include FactoryGirl::Syntax::Methods
 end

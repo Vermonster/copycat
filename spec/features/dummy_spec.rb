@@ -28,7 +28,7 @@ feature "use #t" do
   end
 
   it "shows the copycat_translation instead of the yaml" do
-    FactoryGirl.create(:copycat_translation, key: 'site.index.header', value: 'A different header')
+    create(:copycat_translation, key: 'site.index.header', value: 'A different header')
     visit root_path
     expect(page).not_to have_content 'The Header'
     expect(page).to have_content 'A different header'
@@ -39,8 +39,8 @@ end
 feature "locales" do
 
   it "displays different text based on users' locale" do
-    FactoryGirl.create(:copycat_translation, locale: 'en', key: 'site.index.intro', value: 'world')
-    FactoryGirl.create(:copycat_translation, locale: 'es', key: 'site.index.intro', value: 'mundo')
+    create(:copycat_translation, locale: 'en', key: 'site.index.intro', value: 'world')
+    create(:copycat_translation, locale: 'es', key: 'site.index.intro', value: 'mundo')
 
     I18n.locale = :en
     visit root_path

@@ -30,7 +30,7 @@ describe Copycat do
       expect(base.lookup(nil, '')).to eq("translation missing")
     end
     it "returns copycat_translation if present" do
-      cct = FactoryGirl.create(:copycat_translation)
+      cct = create(:copycat_translation)
       expect(base.lookup(cct.locale, cct.key)).to eq(cct.value)
     end
     it "creates copycat_translation if one is missing" do
