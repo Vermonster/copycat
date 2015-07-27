@@ -1,6 +1,7 @@
 class CopycatTranslationsController < ActionController::Base
   
   http_basic_authenticate_with :name => Copycat.username, :password => Copycat.password
+  before_action :set_copycat_translation, only: [:destroy, :edit, :update]
 
   layout 'copycat'
 
@@ -24,13 +25,10 @@ class CopycatTranslationsController < ActionController::Base
   end
 
   def edit
-    @copycat_translation = CopycatTranslation.find(params[:id])
   end
   
   def update
-    @copycat_translation = CopycatTranslation.find(params[:id])
-    @copycat_translation.value = params[:copycat_translation][:value]
-    @copycat_translation.save!
+    @copycat_translation.update(copycat_translation_params)
     redirect_to copycat_translations_path, :notice => "#{@copycat_translation.key} updated!"
   end
 
@@ -55,12 +53,21 @@ class CopycatTranslationsController < ActionController::Base
   end
 
   def destroy
-    @copycat_translation = CopycatTranslation.find(params[:id])
     notice = "#{@copycat_translation.key} deleted!"
     @copycat_translation.destroy
     redirect_to copycat_translations_path, :notice => notice
   end
 
   def help
+  end
+  
+  private
+  
+  def copycat_translation_params
+    params.require(:copycat_translation).permit(:locale, :key, :value)
+  end
+  
+  def set_copycat_translation
+    @copycat_translation = CopycatTranslation.find(params[:id])
   end
 end
