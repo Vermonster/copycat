@@ -28,8 +28,7 @@ class CopycatTranslationsController < ActionController::Base
   end
   
   def update
-    @copycat_translation.value = params[:copycat_translation][:value]
-    @copycat_translation.save!
+    @copycat_translation.update(copycat_translation_params)
     redirect_to copycat_translations_path, :notice => "#{@copycat_translation.key} updated!"
   end
 
