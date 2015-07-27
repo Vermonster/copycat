@@ -1,6 +1,7 @@
 class CopycatTranslationsController < ActionController::Base
   
   http_basic_authenticate_with :name => Copycat.username, :password => Copycat.password
+  
 
   layout 'copycat'
 
@@ -62,5 +63,15 @@ class CopycatTranslationsController < ActionController::Base
   end
 
   def help
+  end
+  
+  private
+  
+  def copycat_translation_params
+    params.require(:copycat_translation).permit(:locale, :key, :value)
+  end
+  
+  def set_copycat_translation
+    
   end
 end
